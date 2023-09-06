@@ -3,13 +3,14 @@ package dev.seabat.android.composepdfviewer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dev.seabat.android.composepdfviewer.screen.all.AllListScreen
+import dev.seabat.android.composepdfviewer.screen.favorite.FavoriteScreen
+import dev.seabat.android.composepdfviewer.screen.recentness.RecentnessScreen
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,30 +18,45 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposePdfViewerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                PdfViewerApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun PdfViewerApp() {
+    val navController = rememberNavController()
+    PdfViewerNavHost(
+        navController = navController
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    ComposePdfViewerTheme {
-        Greeting("Android")
+fun PdfViewerNavHost(
+    navController: NavHostController
+) {
+    NavHost(navController = navController, startDestination = "recentness") {
+        composable("recentness") {
+            RecentnessScreen(
+                onClick = {
+                    navController.navigate("all")
+                }
+            )
+        }
+        composable("favorite") {
+            FavoriteScreen(
+                onClick = {
+                    navController.navigate("recentness")
+                }
+            )
+        }
+        composable("all") {
+            AllListScreen(
+                onClick = {
+                    navController.navigate("favorite")
+                }
+            )
+        }
     }
 }
