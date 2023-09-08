@@ -1,21 +1,25 @@
 package dev.seabat.android.composepdfviewer
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -41,29 +45,44 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun PdfViewerApp() {
     val navController = rememberNavController()
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom
+    val shouldShowTop = remember { mutableStateOf(true) }
+    val shouldShowBottom = remember { mutableStateOf(true) }
+
+    Scaffold(
+        topBar = {
+            if (shouldShowTop.value) {
+                PdfViewerAppBar()
+            }
+        },
+        bottomBar = {
+            if (shouldShowBottom.value) {
+                PdfViewerBottomNavigation(
+                    navController = navController
+                )
+            }
+        }
     ) {
         PdfViewerNavHost(
-            navController = navController
-        )
-        PdfViewerBottomNavigation(
-            navController = navController
+            navController = navController,
+            shouldShowTop,
+            shouldShowBottom
         )
     }
 }
 
 @Composable
 fun PdfViewerNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    shouldShowTop: MutableState<Boolean>,
+    shouldShowBottom: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController,
-        startDestination = "recentness",
+        startDestination = "favorite",
     ) {
         composable("recentness") {
             RecentnessScreen(
@@ -71,6 +90,8 @@ fun PdfViewerNavHost(
                     navController.navigate("all")
                 }
             )
+            shouldShowTop.value = true
+            shouldShowBottom.value = true
         }
         composable("favorite") {
             FavoriteScreen(
@@ -78,6 +99,8 @@ fun PdfViewerNavHost(
                     navController.navigate("recentness")
                 }
             )
+            shouldShowTop.value = false
+            shouldShowBottom.value = true
         }
         composable("all") {
             AllListScreen(
@@ -85,14 +108,20 @@ fun PdfViewerNavHost(
                     navController.navigate("favorite")
                 }
             )
+            shouldShowTop.value = true
+            shouldShowBottom.value = true
         }
     }
 }
 
-sealed class Screen(val route: String, @StringRes val resourceId: Int) {
-    object Recentness : Screen("recentness", R.string.recentness)
-    object Favorite : Screen("favorite", R.string.favorite)
-    object AllList : Screen("all", R.string.all)
+sealed class Screen(
+    val route: String,
+    @StringRes val resourceId: Int,
+    val image: ImageVector
+) {
+    object Recentness : Screen("recentness", R.string.recentness, Icons.Filled.DateRange)
+    object Favorite : Screen("favorite", R.string.favorite, Icons.Filled.Favorite)
+    object AllList : Screen("all", R.string.all, Icons.Filled.List)
 }
 
 @Composable
@@ -110,7 +139,7 @@ fun PdfViewerBottomNavigation(
         val currentDestination = navBackStackEntry?.destination
         screenItems.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                icon = { Icon(screen.image, contentDescription = null) },
                 label = { Text(stringResource(screen.resourceId)) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
@@ -131,4 +160,11 @@ fun PdfViewerBottomNavigation(
             )
         }
     }
+}
+
+@Composable
+fun PdfViewerAppBar() {
+    androidx.compose.material.TopAppBar(
+        title = { androidx.compose.material3.Text("最近見たファイル") },
+    )
 }
