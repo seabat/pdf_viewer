@@ -154,7 +154,7 @@ fun PdfViewerBottomNavigation(
                         // reselecting the same item
                         launchSingleTop = true
                         // Restore state when reselecting a previously selected item
-                        restoreState = true
+                        restoreState = false // NOTE: true にすると画面が再生成されず、ViewModel の初期化も実行されない
                     }
                 }
             )

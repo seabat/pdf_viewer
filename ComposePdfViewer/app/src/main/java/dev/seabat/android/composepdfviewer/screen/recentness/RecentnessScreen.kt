@@ -12,6 +12,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.seabat.android.composepdfviewer.component.Loading
 import dev.seabat.android.composepdfviewer.entities.Pdf
 import java.util.Date
 
@@ -29,9 +32,11 @@ fun RecentnessScreen(
     viewModel: RecentnessViewModel,
     onClick: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val pdfs = listOf<Pdf>(Pdf("title", "desc", 1, Date()))
 
     HomeScreenContent(
+        uiState = uiState,
         pdfs = pdfs,
         onClick = {}
     )
@@ -39,18 +44,29 @@ fun RecentnessScreen(
 
 @Composable
 fun HomeScreenContent(
+    uiState: RecentnessViewModel.UiState,
     modifier: Modifier = Modifier,
     pdfs: List<Pdf>,
     onClick: (Pdf) -> Unit,
 ) {
-        LazyColumn(
+    when (uiState.state) {
+       is RecentnessViewModel.UiStateType.Loading -> {
+           Loading()
+       }
+       is RecentnessViewModel.UiStateType.Loaded -> {
+           LazyColumn(
 //            modifier.fillMaxSize()
-        ) {
-            pdfs.forEach { pdf ->
-                    item { PdfItem(pdf = pdf, onClick = onClick) }
-                    item { Divider(Modifier.padding(start = 16.dp)) }
-                }
+           ) {
+               pdfs.forEach { pdf ->
+                   item { PdfItem(pdf = pdf, onClick = onClick) }
+                   item { Divider(Modifier.padding(start = 16.dp)) }
+               }
+           }
         }
+       is RecentnessViewModel.UiStateType.Error -> {
+
+       }
+    }
 }
 
 @Composable
