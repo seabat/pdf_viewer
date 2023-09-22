@@ -142,7 +142,8 @@ fun PdfViewerBottomNavigation(
         val currentDestination = navBackStackEntry?.destination
         screenItems.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(screen.image, contentDescription = null, modifier = Modifier.size(Dp(40.0f))) },
+                icon = { Icon(screen.image, contentDescription = null) },
+                label = { Text(stringResource(screen.bottomLabelResId)) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
                     navController.navigate(screen.route) {
