@@ -26,7 +26,7 @@ import java.util.Date
 @Composable
 fun RecentnessScreen(
     modifier: Modifier = Modifier,
-    viewModel: RecentnessViewModel = RecentnessViewModel(),
+    viewModel: RecentnessViewModel,
     onClick: () -> Unit
 ) {
     val pdfs = listOf<Pdf>(Pdf("title", "desc", 1, Date()))

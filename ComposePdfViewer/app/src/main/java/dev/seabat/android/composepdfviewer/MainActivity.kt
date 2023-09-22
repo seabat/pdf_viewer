@@ -4,28 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.StringRes
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -33,14 +25,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import dev.seabat.android.composepdfviewer.screen.Screen
 import dev.seabat.android.composepdfviewer.screen.all.AllListScreen
 import dev.seabat.android.composepdfviewer.screen.favorite.FavoriteScreen
 import dev.seabat.android.composepdfviewer.screen.getScreen
 import dev.seabat.android.composepdfviewer.screen.recentness.RecentnessScreen
+import dev.seabat.android.composepdfviewer.screen.recentness.RecentnessViewModel
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +92,9 @@ fun PdfViewerNavHost(
         startDestination = "favorite",
     ) {
         composable("recentness") {
+            val viewModel = hiltViewModel<RecentnessViewModel>()
             RecentnessScreen(
+                viewModel = viewModel,
                 onClick = {
                     navController.navigate("all")
                 }
@@ -133,8 +129,8 @@ fun PdfViewerBottomNavigation(
     navController: NavHostController
 ) {
     val screenItems = listOf(
-        Screen.Favorite,
         Screen.Recentness,
+        Screen.Favorite,
         Screen.AllList
     )
 
