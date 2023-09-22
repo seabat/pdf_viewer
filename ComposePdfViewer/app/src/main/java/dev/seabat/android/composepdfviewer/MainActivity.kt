@@ -9,16 +9,21 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.ListItemDefaults.contentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -28,8 +33,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dev.seabat.android.composepdfviewer.screen.Screen
 import dev.seabat.android.composepdfviewer.screen.all.AllListScreen
 import dev.seabat.android.composepdfviewer.screen.favorite.FavoriteScreen
+import dev.seabat.android.composepdfviewer.screen.getScreen
 import dev.seabat.android.composepdfviewer.screen.recentness.RecentnessScreen
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
 
@@ -49,13 +56,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PdfViewerApp() {
     val navController = rememberNavController()
+    
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = getScreen(
+        backStackEntry?.destination?.route ?: Screen.Favorite.route
+    )
+
     val shouldShowTop = remember { mutableStateOf(true) }
     val shouldShowBottom = remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
             if (shouldShowTop.value) {
-                PdfViewerAppBar()
+                PdfViewerAppBar(currentScreen)
             }
         },
         bottomBar = {
@@ -114,15 +127,6 @@ fun PdfViewerNavHost(
     }
 }
 
-sealed class Screen(
-    val route: String,
-    @StringRes val resourceId: Int,
-    val image: ImageVector
-) {
-    object Recentness : Screen("recentness", R.string.recentness, Icons.Filled.DateRange)
-    object Favorite : Screen("favorite", R.string.favorite, Icons.Filled.Favorite)
-    object AllList : Screen("all", R.string.all, Icons.Filled.List)
-}
 
 @Composable
 fun PdfViewerBottomNavigation(
@@ -140,7 +144,7 @@ fun PdfViewerBottomNavigation(
         screenItems.forEach { screen ->
             BottomNavigationItem(
                 icon = { Icon(screen.image, contentDescription = null) },
-                label = { Text(stringResource(screen.resourceId)) },
+                label = { Text(stringResource(screen.bottomLabelResId)) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
                     navController.navigate(screen.route) {
@@ -163,8 +167,14 @@ fun PdfViewerBottomNavigation(
 }
 
 @Composable
-fun PdfViewerAppBar() {
-    androidx.compose.material.TopAppBar(
-        title = { androidx.compose.material3.Text("最近見たファイル") },
+fun PdfViewerAppBar(currentScreen: Screen) {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = currentScreen.appBarTitleResId),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        },
+        backgroundColor = MaterialTheme.colorScheme.primary
     )
 }
