@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -16,7 +17,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -139,8 +142,7 @@ fun PdfViewerBottomNavigation(
         val currentDestination = navBackStackEntry?.destination
         screenItems.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(screen.image, contentDescription = null) },
-                label = { Text(stringResource(screen.bottomLabelResId)) },
+                icon = { Icon(screen.image, contentDescription = null, modifier = Modifier.size(Dp(40.0f))) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
                     navController.navigate(screen.route) {
