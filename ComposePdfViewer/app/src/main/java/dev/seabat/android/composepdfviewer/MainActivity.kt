@@ -134,7 +134,10 @@ fun PdfViewerBottomNavigation(
         Screen.AllList
     )
 
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
+    ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         screenItems.forEach { screen ->
