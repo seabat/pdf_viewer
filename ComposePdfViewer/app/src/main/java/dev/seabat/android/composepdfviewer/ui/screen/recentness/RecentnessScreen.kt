@@ -59,7 +59,7 @@ fun RecentnessScreenContent(
            LazyColumn {
                uiState.pdfs.forEach { pdf ->
                    item { PdfItem(pdf = pdf, onClick = onClick) }
-                   item { Divider(Modifier.padding(start = 16.dp)) }
+                   item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                }
            }
         }
