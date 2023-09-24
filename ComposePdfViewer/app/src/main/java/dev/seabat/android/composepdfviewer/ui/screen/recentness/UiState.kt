@@ -1,0 +1,10 @@
+package dev.seabat.android.composepdfviewer.ui.screen.recentness
+
+import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.ui.UiStateType
+
+data class UiState(
+    val state: UiStateType = UiStateType.Loading,
+    val pdfs: PdfListEntity = PdfListEntity(arrayListOf())
+)
+

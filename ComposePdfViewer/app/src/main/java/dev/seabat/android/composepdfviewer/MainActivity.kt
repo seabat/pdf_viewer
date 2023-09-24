@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -17,9 +16,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -29,12 +26,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.seabat.android.composepdfviewer.screen.Screen
-import dev.seabat.android.composepdfviewer.screen.all.AllListScreen
-import dev.seabat.android.composepdfviewer.screen.favorite.FavoriteScreen
-import dev.seabat.android.composepdfviewer.screen.getScreen
-import dev.seabat.android.composepdfviewer.screen.recentness.RecentnessScreen
-import dev.seabat.android.composepdfviewer.screen.recentness.RecentnessViewModel
+import dev.seabat.android.composepdfviewer.ui.screen.Screen
+import dev.seabat.android.composepdfviewer.ui.screen.all.AllListScreen
+import dev.seabat.android.composepdfviewer.ui.screen.favorite.FavoriteScreen
+import dev.seabat.android.composepdfviewer.ui.screen.getScreen
+import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessScreen
+import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessViewModel
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
 
 @AndroidEntryPoint

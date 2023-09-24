@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.screen.favorite
+package dev.seabat.android.composepdfviewer.ui.screen.favorite
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.screen.all
+package dev.seabat.android.composepdfviewer.ui.screen.all
 
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +37,7 @@ fun Greeting(name: String,  onClick: () -> Unit, modifier: Modifier = Modifier) 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    dev.seabat.android.composepdfviewer.screen.favorite.Greeting(
+    dev.seabat.android.composepdfviewer.ui.screen.favorite.Greeting(
         name = "お気に入りファイルへ",
         onClick = { /* Do nothing */ }
     )
