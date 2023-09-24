@@ -18,7 +18,7 @@ import dev.seabat.android.composepdfviewer.ui.screen.recentness.PdfItem
 fun AllListScreen(
     modifier: Modifier = Modifier,
     viewModel: AllListViewModel,
-    onClick: () -> Unit
+    navigateToPdfViewer: (PdfEntity) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -27,7 +27,7 @@ fun AllListScreen(
         onRefresh = { viewModel.reload() },
         onClick = {
             viewModel.addRecentness(it) {
-                onClick()
+                navigateToPdfViewer(it)
             }
         }
     )

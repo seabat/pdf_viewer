@@ -3,6 +3,7 @@
     <string name="favorite">お気に入り</string>
     <string name="recentness">最近見た</string>
     <string name="all">全て</string>
+    <string name="pdf_viewer">ビューア</string>
 
     <string name="error_text">エラーが発生しました</string>
     <string name="retry">リトライ</string>

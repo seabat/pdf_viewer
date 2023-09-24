@@ -7,12 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,19 +24,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.screen.Screen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListScreen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListViewModel
 import dev.seabat.android.composepdfviewer.ui.screen.favorite.FavoriteScreen
 import dev.seabat.android.composepdfviewer.ui.screen.getScreen
+import dev.seabat.android.composepdfviewer.ui.screen.pdfviewer.PdfViewerScreen
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessScreen
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessViewModel
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
+import java.util.Date
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -51,33 +59,43 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PdfViewerApp() {
     val navController = rememberNavController()
-    
+
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = getScreen(
         backStackEntry?.destination?.route ?: Screen.Favorite.route
     )
 
-    val shouldShowTop = remember { mutableStateOf(true) }
-    val shouldShowBottom = remember { mutableStateOf(true) }
+    val scaffoldState = remember {
+        mutableStateOf(
+            ScaffoldState(
+                shouldShowTop = true,
+                shouldShowTopClose = false,
+                shouldShowBottom = true
+            )
+        )
+    }
 
     Scaffold(
         topBar = {
-            if (shouldShowTop.value) {
-                PdfViewerAppBar(currentScreen)
+            if (scaffoldState.value.shouldShowTop) {
+                PdfViewerAppBar(
+                    navController = navController,
+                    currentScreen = currentScreen,
+                    scaffoldState = scaffoldState
+                )
             }
         },
         bottomBar = {
-            if (shouldShowBottom.value) {
+            if (scaffoldState.value.shouldShowBottom) {
                 PdfViewerBottomNavigation(
-                    navController = navController
+                    navController = navController,
                 )
             }
         }
     ) {
         PdfViewerNavHost(
             navController = navController,
-            shouldShowTop,
-            shouldShowBottom
+            onChangeScaffoldState = { state -> scaffoldState.value = state },
         )
     }
 }
@@ -85,8 +103,7 @@ fun PdfViewerApp() {
 @Composable
 fun PdfViewerNavHost(
     navController: NavHostController,
-    shouldShowTop: MutableState<Boolean>,
-    shouldShowBottom: MutableState<Boolean>
+    onChangeScaffoldState: (ScaffoldState) -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -100,8 +117,13 @@ fun PdfViewerNavHost(
                     navController.navigate("all")
                 }
             )
-            shouldShowTop.value = true
-            shouldShowBottom.value = true
+            onChangeScaffoldState(
+                ScaffoldState(
+                    shouldShowTop = true,
+                    shouldShowTopClose = false,
+                    shouldShowBottom = true
+                )
+            )
         }
         composable("favorite") {
             FavoriteScreen(
@@ -109,19 +131,49 @@ fun PdfViewerNavHost(
                     navController.navigate("recentness")
                 }
             )
-            shouldShowTop.value = false
-            shouldShowBottom.value = true
+            onChangeScaffoldState(
+                ScaffoldState(
+                    shouldShowTop = false,
+                    shouldShowTopClose = false,
+                    shouldShowBottom = true
+                )
+            )
         }
         composable("all") {
             val viewModel = hiltViewModel<AllListViewModel>()
             AllListScreen(
                 viewModel = viewModel,
-                onClick = {
-                    navController.navigate("favorite")
+                navigateToPdfViewer = { pdf ->
+                    //TODO: pdf を JSON データに変換する
+                    navController.navigate("pdf_viewer" + "/?pdf=" + "pdfのJSONデータ")
                 }
             )
-            shouldShowTop.value = true
-            shouldShowBottom.value = true
+            onChangeScaffoldState(
+                ScaffoldState(
+                    shouldShowTop = true,
+                    shouldShowTopClose = false,
+                    shouldShowBottom = true
+                )
+            )
+        }
+        composable(
+            route = "pdf_viewer/?pdf={pdf}",
+            arguments = listOf(navArgument("pdf") { type = NavType.StringType }),
+        ) {backStackEntry ->
+            val pdfJson = backStackEntry.arguments?.getString("pdf")
+            pdfJson?.let {
+                //TODO: pdfJson を PDF オブジェクトに変換する
+                PdfViewerScreen(
+                    pdf = PdfEntity("title1", "desc1", 178, Date()),
+                )
+            }
+            onChangeScaffoldState(
+                ScaffoldState(
+                    shouldShowTop = true,
+                    shouldShowTopClose = true,
+                    shouldShowBottom = false
+                )
+            )
         }
     }
 }
@@ -129,14 +181,14 @@ fun PdfViewerNavHost(
 
 @Composable
 fun PdfViewerBottomNavigation(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val screenItems = listOf(
         Screen.Recentness,
         Screen.Favorite,
         Screen.AllList
     )
-
+    
     BottomNavigation(
         backgroundColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary
@@ -146,7 +198,11 @@ fun PdfViewerBottomNavigation(
         screenItems.forEach { screen ->
             BottomNavigationItem(
                 icon = { Icon(screen.image, contentDescription = null) },
-                label = { Text(stringResource(screen.bottomLabelResId)) },
+                label = {
+                    Text(
+                        stringResource(screen.bottomLabelResId ?: throw IllegalStateException("BottomNavigationのラベルが設定されていません"))
+                    )
+                },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
                     navController.navigate(screen.route) {
@@ -166,10 +222,15 @@ fun PdfViewerBottomNavigation(
             )
         }
     }
+
 }
 
 @Composable
-fun PdfViewerAppBar(currentScreen: Screen) {
+fun PdfViewerAppBar(
+    navController: NavHostController,
+    currentScreen: Screen,
+    scaffoldState: State<ScaffoldState>,
+) {
     TopAppBar(
         title = {
             Text(
@@ -177,6 +238,25 @@ fun PdfViewerAppBar(currentScreen: Screen) {
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },
-        backgroundColor = MaterialTheme.colorScheme.primary
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        navigationIcon = if (scaffoldState.value.shouldShowTopClose) {
+            {
+                IconButton(
+                    onClick = {
+                        navController.navigateUp()
+                    }
+                ) {
+                    Icon(Icons.Default.Close, contentDescription = "")
+                }
+            }
+        } else {
+            null
+        }
     )
 }
+
+data class ScaffoldState(
+    val shouldShowTop: Boolean,
+    val shouldShowTopClose: Boolean,
+    val shouldShowBottom: Boolean
+)
