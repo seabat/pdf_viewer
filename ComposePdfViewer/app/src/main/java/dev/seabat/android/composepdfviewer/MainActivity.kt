@@ -38,6 +38,7 @@ import dev.seabat.android.composepdfviewer.ui.screen.all.AllListViewModel
 import dev.seabat.android.composepdfviewer.ui.screen.favorite.FavoriteScreen
 import dev.seabat.android.composepdfviewer.ui.screen.getScreen
 import dev.seabat.android.composepdfviewer.ui.screen.pdfviewer.PdfViewerScreen
+import dev.seabat.android.composepdfviewer.ui.screen.pdfviewer.PdfViewerViewModel
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessScreen
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessViewModel
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
@@ -163,7 +164,9 @@ fun PdfViewerNavHost(
             val pdfJson = backStackEntry.arguments?.getString("pdf")
             pdfJson?.let {
                 //TODO: pdfJson を PDF オブジェクトに変換する
+                val viewModel = hiltViewModel<PdfViewerViewModel>()
                 PdfViewerScreen(
+                    viewModel = viewModel,
                     pdf = PdfEntity("title1", "desc1", 178, Date()),
                 )
             }
