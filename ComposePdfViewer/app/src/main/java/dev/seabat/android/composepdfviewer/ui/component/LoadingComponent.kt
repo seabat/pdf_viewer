@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LoadingComponent() {
@@ -18,4 +19,10 @@ fun LoadingComponent() {
     ) {
         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
     }
+}
+
+@Preview
+@Composable
+fun PreviewLoadingComponent() {
+    LoadingComponent()
 }

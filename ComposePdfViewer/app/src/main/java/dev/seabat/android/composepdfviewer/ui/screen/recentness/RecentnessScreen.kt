@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.seabat.android.composepdfviewer.ui.component.LoadingComponent
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.ui.uistate.UiStateType
+import dev.seabat.android.composepdfviewer.ui.component.ErrorComponent
+import dev.seabat.android.composepdfviewer.ui.UiStateType
 
 @Composable
 fun RecentnessScreen(
@@ -34,6 +35,7 @@ fun RecentnessScreen(
 
     RecentnessScreenContent(
         uiState = uiState,
+        onRefresh = { viewModel.reload() },
         onClick = {}
     )
 }
@@ -41,6 +43,7 @@ fun RecentnessScreen(
 @Composable
 fun RecentnessScreenContent(
     uiState: UiState,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (PdfEntity) -> Unit,
 ) {
@@ -56,8 +59,10 @@ fun RecentnessScreenContent(
                }
            }
         }
-       is UiStateType.Error -> {
-
+        is UiStateType.Error -> {
+           ErrorComponent(uiState.state.e) {
+               onRefresh()
+           }
        }
     }
 }

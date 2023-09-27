@@ -3,6 +3,7 @@ package dev.seabat.android.composepdfviewer.ui.screen.recentness
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
 import dev.seabat.android.composepdfviewer.ui.uistate.UiStateType
@@ -31,6 +32,17 @@ class RecentnessViewModel @Inject constructor(
     override fun onCleared() {
         fetchJob?.cancel()
         super.onCleared()
+    }
+
+    fun reload() {
+        _uiState.update {
+            it.copy(
+                state = UiStateType.Loading,
+                pdfs = PdfListEntity(arrayListOf())
+            )
+        }
+        fetchJob?.cancel()
+        fetch()
     }
 
     private fun fetch() {
