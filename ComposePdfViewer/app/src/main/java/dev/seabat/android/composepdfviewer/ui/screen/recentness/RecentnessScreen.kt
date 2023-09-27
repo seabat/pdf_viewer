@@ -18,12 +18,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.seabat.android.composepdfviewer.ui.component.LoadingComponent
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.ui.component.ErrorComponent
 import dev.seabat.android.composepdfviewer.ui.UiStateType
+import java.lang.Exception
+import java.util.Date
 
 @Composable
 fun RecentnessScreen(
@@ -89,4 +93,55 @@ fun PdfItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun `Loaded状態のHomeScreenContent`() {
+    RecentnessScreenContent(
+        uiState = UiState(
+            state = UiStateType.Loaded,
+            pdfs = PdfListEntity(
+                arrayListOf(
+                    PdfEntity("title1", "desc1", 178, Date()),
+                    PdfEntity("title2", "desc2", 298, Date()),
+                    PdfEntity("title3", "desc3", 587, Date()),
+                    PdfEntity("title4", "desc4", 319, Date()),
+                    PdfEntity("title5", "desc5", 287, Date())
+                )
+            )
+        ),
+        onRefresh = {},
+        onClick =  {},
+    )
+}
+
+@Preview
+@Composable
+fun `Loading状態のHomeScreenContent`() {
+    RecentnessScreenContent(
+        uiState = UiState(
+            state = UiStateType.Loading,
+            pdfs = PdfListEntity(
+                arrayListOf()
+            )
+        ),
+        onRefresh = {},
+        onClick =  {},
+    )
+}
+
+@Preview
+@Composable
+fun `Error状態のHomeScreenContent`() {
+    RecentnessScreenContent(
+        uiState = UiState(
+            state = UiStateType.Error(Exception("エラー内容")),
+            pdfs = PdfListEntity(
+                arrayListOf()
+            )
+        ),
+        onRefresh = {},
+        onClick =  {},
+    )
 }
