@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.repository
+package dev.seabat.android.composepdfviewer.data.repository
 
 import dev.seabat.android.composepdfviewer.domain.repository.RecentnessListRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class RecentnessListRepository @Inject constructor(): RecentnessListRepositoryContract {
     private val pdfs: PdfListEntity = PdfListEntity(
-        arrayListOf(
+        mutableListOf(
             PdfEntity("title1", "desc1", 178, Date()),
             PdfEntity("title2", "desc2", 298, Date()),
             PdfEntity("title3", "desc3", 587, Date()),
@@ -27,6 +27,11 @@ class RecentnessListRepository @Inject constructor(): RecentnessListRepositoryCo
 
     override suspend fun add(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
+            // 重複データを削除する
+            pdfs.firstOrNull { it.title == pdf.title } ?.let {
+                pdfs.remove(it)
+            }
+
             pdfs.add(pdf)
         }
     }

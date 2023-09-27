@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class AllListRepository @Inject constructor(): AllListRepositoryContract {
     private val pdfs: PdfListEntity = PdfListEntity(
-        arrayListOf(
+        mutableListOf(
             PdfEntity("title1", "desc1", 178, Date()),
             PdfEntity("title2", "desc2", 298, Date()),
             PdfEntity("title3", "desc3", 587, Date()),

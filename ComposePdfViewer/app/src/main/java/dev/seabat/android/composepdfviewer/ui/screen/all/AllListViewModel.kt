@@ -3,7 +3,9 @@ package dev.seabat.android.composepdfviewer.ui.screen.all
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchAllListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
 import dev.seabat.android.composepdfviewer.ui.UiStateType
@@ -18,12 +20,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllListViewModel @Inject constructor(
-    private val fetchAllListUseCase: FetchAllListUseCaseContract
+    private val fetchAllListUseCase: FetchAllListUseCaseContract,
+    private val addRecentnessUseCase: AddRecentnessListUseCaseContract
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AllListUiState())
     val uiState: StateFlow<AllListUiState> = _uiState.asStateFlow()
 
     private var fetchJob: Job? = null
+    private var addJob: Job? = null
 
     init {
         fetch()
@@ -31,6 +35,7 @@ class AllListViewModel @Inject constructor(
 
     override fun onCleared() {
         fetchJob?.cancel()
+        addJob?.cancel()
         super.onCleared()
     }
 
@@ -38,11 +43,28 @@ class AllListViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 state = UiStateType.Loading,
-                pdfs = PdfListEntity(arrayListOf())
+                pdfs = PdfListEntity(mutableListOf())
             )
         }
         fetchJob?.cancel()
         fetch()
+    }
+
+    fun addRecentness(pdf: PdfEntity, onAddCompleted: () -> Unit) {
+        addJob = viewModelScope.launch {
+            when (val result =addRecentnessUseCase(pdf)) {
+                is UseCaseResult.Success -> {
+                    onAddCompleted()
+                }
+                is UseCaseResult.Failure -> {
+                    _uiState.update {
+                        it.copy(
+                            state = UiStateType.Error(result.e),
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun fetch() {

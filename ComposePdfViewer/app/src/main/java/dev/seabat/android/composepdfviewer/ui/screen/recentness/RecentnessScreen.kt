@@ -102,7 +102,7 @@ fun `Loaded状態のHomeScreenContent`() {
         uiState = RecentnessUiState(
             state = UiStateType.Loaded,
             pdfs = PdfListEntity(
-                arrayListOf(
+                mutableListOf(
                     PdfEntity("title1", "desc1", 178, Date()),
                     PdfEntity("title2", "desc2", 298, Date()),
                     PdfEntity("title3", "desc3", 587, Date()),
@@ -122,9 +122,7 @@ fun `Loading状態のHomeScreenContent`() {
     RecentnessScreenContent(
         uiState = RecentnessUiState(
             state = UiStateType.Loading,
-            pdfs = PdfListEntity(
-                arrayListOf()
-            )
+            pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
         onClick =  {},
@@ -137,9 +135,7 @@ fun `Error状態のHomeScreenContent`() {
     RecentnessScreenContent(
         uiState = RecentnessUiState(
             state = UiStateType.Error(Exception("エラー内容")),
-            pdfs = PdfListEntity(
-                arrayListOf()
-            )
+            pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
         onClick =  {},

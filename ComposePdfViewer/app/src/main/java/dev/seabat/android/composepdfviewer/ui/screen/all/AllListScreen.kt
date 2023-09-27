@@ -25,7 +25,11 @@ fun AllListScreen(
     AllListScreenContent(
         uiState = uiState,
         onRefresh = { viewModel.reload() },
-        onClick = {}
+        onClick = {
+            viewModel.addRecentness(it) {
+                onClick()
+            }
+        }
     )
 }
 

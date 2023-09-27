@@ -38,7 +38,7 @@ class RecentnessViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 state = UiStateType.Loading,
-                pdfs = PdfListEntity(arrayListOf())
+                pdfs = PdfListEntity(mutableListOf())
             )
         }
         fetchJob?.cancel()
