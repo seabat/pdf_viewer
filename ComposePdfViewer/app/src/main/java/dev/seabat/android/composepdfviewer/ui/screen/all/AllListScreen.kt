@@ -1,44 +1,59 @@
 package dev.seabat.android.composepdfviewer.ui.screen.all
 
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.ui.UiStateType
+import dev.seabat.android.composepdfviewer.ui.component.ErrorComponent
+import dev.seabat.android.composepdfviewer.ui.component.LoadingComponent
+import dev.seabat.android.composepdfviewer.ui.screen.recentness.PdfItem
 
 @Composable
 fun AllListScreen(
     modifier: Modifier = Modifier,
-    viewModel: AllListViewModel = AllListViewModel(),
+    viewModel: AllListViewModel,
     onClick: () -> Unit
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Greeting(
-            name = "お気に入りファイルへ",
-            onClick = onClick
-        )
-    }
-}
+    val uiState by viewModel.uiState.collectAsState()
 
-@Composable
-fun Greeting(name: String,  onClick: () -> Unit, modifier: Modifier = Modifier) {
-    ElevatedButton(onClick = { onClick() }) {
-        Text(
-            text = "$name!",
-            modifier = modifier
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    dev.seabat.android.composepdfviewer.ui.screen.favorite.Greeting(
-        name = "お気に入りファイルへ",
-        onClick = { /* Do nothing */ }
+    AllListScreenContent(
+        uiState = uiState,
+        onRefresh = { viewModel.reload() },
+        onClick = {}
     )
+}
+
+@Composable
+fun AllListScreenContent(
+    uiState: AllListUiState,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+    onClick: (PdfEntity) -> Unit,
+) {
+    when (uiState.state) {
+        is UiStateType.Loading -> {
+            LoadingComponent()
+        }
+        is UiStateType.Loaded -> {
+            LazyColumn(
+//            modifier.fillMaxSize()
+            ) {
+                uiState.pdfs.forEach { pdf ->
+                    item { PdfItem(pdf = pdf, onClick = onClick) }
+                    item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
+                }
+            }
+        }
+        is UiStateType.Error -> {
+            ErrorComponent(uiState.state.e) {
+                onRefresh()
+            }
+        }
+    }
 }

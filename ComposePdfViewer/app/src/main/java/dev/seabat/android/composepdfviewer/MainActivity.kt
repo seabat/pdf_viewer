@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.seabat.android.composepdfviewer.ui.screen.Screen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListScreen
+import dev.seabat.android.composepdfviewer.ui.screen.all.AllListViewModel
 import dev.seabat.android.composepdfviewer.ui.screen.favorite.FavoriteScreen
 import dev.seabat.android.composepdfviewer.ui.screen.getScreen
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessScreen
@@ -112,7 +113,9 @@ fun PdfViewerNavHost(
             shouldShowBottom.value = true
         }
         composable("all") {
+            val viewModel = hiltViewModel<AllListViewModel>()
             AllListScreen(
+                viewModel = viewModel,
                 onClick = {
                     navController.navigate("favorite")
                 }

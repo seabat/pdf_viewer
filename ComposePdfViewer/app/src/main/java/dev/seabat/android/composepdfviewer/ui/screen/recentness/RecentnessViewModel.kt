@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
-import dev.seabat.android.composepdfviewer.ui.uistate.UiStateType
+import dev.seabat.android.composepdfviewer.ui.UiStateType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +20,8 @@ import javax.inject.Inject
 class RecentnessViewModel @Inject constructor(
     private val fetchRecentnessListUseCase: FetchRecentnessListUseCaseContract
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(RecentnessUiState())
+    val uiState: StateFlow<RecentnessUiState> = _uiState.asStateFlow()
 
     private var fetchJob: Job? = null
 

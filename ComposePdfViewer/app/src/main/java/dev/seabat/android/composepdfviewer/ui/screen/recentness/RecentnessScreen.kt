@@ -46,7 +46,7 @@ fun RecentnessScreen(
 
 @Composable
 fun RecentnessScreenContent(
-    uiState: UiState,
+    uiState: RecentnessUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (PdfEntity) -> Unit,
@@ -99,7 +99,7 @@ fun PdfItem(
 @Composable
 fun `Loaded状態のHomeScreenContent`() {
     RecentnessScreenContent(
-        uiState = UiState(
+        uiState = RecentnessUiState(
             state = UiStateType.Loaded,
             pdfs = PdfListEntity(
                 arrayListOf(
@@ -120,7 +120,7 @@ fun `Loaded状態のHomeScreenContent`() {
 @Composable
 fun `Loading状態のHomeScreenContent`() {
     RecentnessScreenContent(
-        uiState = UiState(
+        uiState = RecentnessUiState(
             state = UiStateType.Loading,
             pdfs = PdfListEntity(
                 arrayListOf()
@@ -135,7 +135,7 @@ fun `Loading状態のHomeScreenContent`() {
 @Composable
 fun `Error状態のHomeScreenContent`() {
     RecentnessScreenContent(
-        uiState = UiState(
+        uiState = RecentnessUiState(
             state = UiStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(
                 arrayListOf()
