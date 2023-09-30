@@ -18,27 +18,43 @@ class PdfViewerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<PdfViewerUiState>(
         PdfViewerUiState(
             state = UiStateType.Loading,
-            totalPageCount = 0
+            totalPageCount = 0,
+            currentPageNo = 0
         )
     )
     val uiState: StateFlow<PdfViewerUiState> = _uiState.asStateFlow()
 
     private var renderingJob: Job? = null
 
-    init {
-        doRendering()
-    }
+//    init {
+//        doRendering(1)
+//    }
 
     override fun onCleared() {
         renderingJob?.cancel()
         super.onCleared()
     }
 
-    private fun doRendering() {
+    fun readAhead(pageNo: Int) {
+        doRendering(pageNo)
+    }
+
+    private fun doRendering(pageNo: Int) {
         renderingJob = viewModelScope.launch {
-            delay(1000)
             _uiState.update {
-                PdfViewerUiState(state = UiStateType.Loaded, totalPageCount = 1)
+                it.copy(
+                    state = UiStateType.Loading,
+                )
+            }
+
+            delay(1000)
+
+            _uiState.update {
+                PdfViewerUiState(
+                    state = UiStateType.Loaded,
+                    totalPageCount = 10,
+                    currentPageNo = pageNo
+                )
             }
         }
     }
