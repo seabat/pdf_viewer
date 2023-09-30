@@ -3,9 +3,7 @@ package dev.seabat.android.composepdfviewer.ui.screen.pdfviewer
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
-import android.os.Build
 import android.os.ParcelFileDescriptor
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.seabat.android.composepdfviewer.ui.UiStateType
@@ -29,7 +27,8 @@ class PdfViewerViewModel @Inject constructor(
         PdfViewerUiState(
             state = UiStateType.Loading,
             currentPageNo = 0,
-            bitmap = null
+            bitmap = null,
+            zoom = ZoomType.ZoomNone
         )
     )
     val uiState: StateFlow<PdfViewerUiState> = _uiState.asStateFlow()
@@ -58,10 +57,15 @@ class PdfViewerViewModel @Inject constructor(
     }
 
     fun readAhead(pageNo: Int, displayArea: Dimensions) {
-        doRendering(pageNo, displayArea)
+        doRendering(pageNo, displayArea, uiState.value.zoom)
     }
 
-    private fun doRendering(pageNo: Int, displayArea: Dimensions) {
+    fun changePageSize(displayArea: Dimensions) {
+        val newZoom = ZoomType.next(uiState.value.zoom)
+        doRendering(uiState.value.currentPageNo, displayArea, newZoom)
+    }
+
+    private fun doRendering(pageNo: Int, displayArea: Dimensions, zoomType: ZoomType) {
         renderingJob = viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -74,14 +78,32 @@ class PdfViewerViewModel @Inject constructor(
                 Dimensions(page.width, page.height),
                 displayArea
             )
-            val bitmap = Bitmap.createBitmap(dimensions.width, dimensions.height, Bitmap.Config.ARGB_8888)
+
+            val bitmap = when (zoomType) {
+                ZoomType.ZoomNone -> {
+                    Bitmap.createBitmap(
+                        dimensions.width,
+                        dimensions.height,
+                        Bitmap.Config.ARGB_8888
+                    )
+                }
+                ZoomType.ZoomDouble -> {
+                    Bitmap.createBitmap(
+                        (dimensions.width * 2.0).toInt(),
+                        (dimensions.height * 2.0).toInt(),
+                        Bitmap.Config.ARGB_8888
+                    )
+                }
+            }
+
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
 
             _uiState.update {
-                PdfViewerUiState(
-                    state = UiStateType.Loaded,
+                it.copy(
                     currentPageNo = pageNo,
-                    bitmap = bitmap
+                    state = UiStateType.Loaded,
+                    bitmap = bitmap,
+                    zoom = zoomType
                 )
             }
 

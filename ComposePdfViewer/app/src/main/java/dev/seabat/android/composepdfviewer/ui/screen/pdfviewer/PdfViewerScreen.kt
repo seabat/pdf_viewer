@@ -10,11 +10,15 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,11 +45,13 @@ fun PdfViewerScreen(
     viewModel: PdfViewerViewModel = hiltViewModel(),
     pdf: PdfEntity,
 ) {
+    val activity = LocalContext.current as ComponentActivity
     val uiState by viewModel.uiState.collectAsState()
     PdfViewerScreenContent(
         uiState = uiState,
-        readPage = { pageNo, dimensions -> viewModel.readAhead(pageNo, dimensions) },
-        extractPageCount = { viewModel.extractPageCount() }
+        readPage = { pageNo -> viewModel.readAhead(pageNo, getImageViewDimensions(activity)) },
+        extractPageCount = { viewModel.extractPageCount() },
+        onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
     )
 }
 
@@ -56,9 +62,9 @@ fun PdfViewerScreenContent(
     uiState: PdfViewerUiState,
     modifier: Modifier = Modifier,
     extractPageCount: () -> Int,
-    readPage: (pageNo: Int, dimensions: Dimensions) -> Unit,
+    readPage: (pageNo: Int) -> Unit,
+    onDoubleClick: () -> Unit
 ) {
-    val activity = LocalContext.current as ComponentActivity
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = {
@@ -67,7 +73,7 @@ fun PdfViewerScreenContent(
     )
 
     LaunchedEffect(pagerState.currentPage) {
-        readPage(pagerState.currentPage, getImageViewDimensions(activity))
+        readPage(pagerState.currentPage)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -78,15 +84,30 @@ fun PdfViewerScreenContent(
                 .fillMaxSize()
         ) { pageIndex ->
             uiState.bitmap?.let {
-                Image(
-                    bitmap = it.asImageBitmap(),
-                    contentDescription = null,
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .padding(IMAGE_VIEW_PADDING_SIZE.dp)
-//                        .fillMaxSize()
-                        .background(Color.White),
-                    contentScale = ContentScale.Fit
-                )
+                        .fillMaxSize()
+                        .background(viewer_background)
+                        .verticalScroll(rememberScrollState())
+                        .horizontalScroll(rememberScrollState())
+                        .combinedClickable(
+                            onClick = {},
+                            onDoubleClick = {
+                                onDoubleClick()
+                            },
+                            onLongClick = {}
+                        )
+                ) {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .background(Color.White),
+                        contentScale = ContentScale.None
+                    )
+                }
             }
         }
         if (uiState.state == UiStateType.Loading) {
