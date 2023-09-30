@@ -13,6 +13,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.ui.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screen.Screen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListScreen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListViewModel
@@ -232,36 +234,6 @@ fun PdfViewerBottomNavigation(
         }
     }
 
-}
-
-@Composable
-fun PdfViewerAppBar(
-    navController: NavHostController,
-    currentScreen: Screen,
-    scaffoldState: State<ScaffoldState>,
-) {
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(id = currentScreen.appBarTitleResId),
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        },
-        backgroundColor = MaterialTheme.colorScheme.primary,
-        navigationIcon = if (scaffoldState.value.shouldShowTopClose) {
-            {
-                IconButton(
-                    onClick = {
-                        navController.navigateUp()
-                    }
-                ) {
-                    Icon(Icons.Default.Close, contentDescription = "")
-                }
-            }
-        } else {
-            null
-        }
-    )
 }
 
 data class ScaffoldState(
