@@ -1,8 +1,13 @@
 package dev.seabat.android.composepdfviewer.di
 
+import android.content.Context
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import dev.seabat.android.composepdfviewer.data.repository.AllListRepository
 import dev.seabat.android.composepdfviewer.data.repository.RecentnessListRepository
@@ -42,4 +47,14 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindFetchRecentnessListUseCase(useCase: FetchRecentnessListUseCase): FetchRecentnessListUseCaseContract
+}
+
+@Module
+@InstallIn(ActivityComponent::class)
+object ActivityModule {
+    @Provides
+    @ActivityScoped
+    fun provideContext(@ActivityContext context: Context): Context {
+        return context
+    }
 }

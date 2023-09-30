@@ -3,7 +3,9 @@ package dev.seabat.android.composepdfviewer.ui.screen.pdfviewer
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
+import android.os.Build
 import android.os.ParcelFileDescriptor
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.seabat.android.composepdfviewer.ui.UiStateType
@@ -55,11 +57,11 @@ class PdfViewerViewModel @Inject constructor(
         }
     }
 
-    fun readAhead(pageNo: Int) {
-        doRendering(pageNo)
+    fun readAhead(pageNo: Int, displayArea: Dimensions) {
+        doRendering(pageNo, displayArea)
     }
 
-    private fun doRendering(pageNo: Int) {
+    private fun doRendering(pageNo: Int, displayArea: Dimensions) {
         renderingJob = viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -68,7 +70,11 @@ class PdfViewerViewModel @Inject constructor(
             }
 
             val page = pdfRenderer.openPage(pageNo)
-            val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+            val dimensions = calculateBitmapDimensions(
+                Dimensions(page.width, page.height),
+                displayArea
+            )
+            val bitmap = Bitmap.createBitmap(dimensions.width, dimensions.height, Bitmap.Config.ARGB_8888)
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
 
             _uiState.update {
@@ -80,6 +86,28 @@ class PdfViewerViewModel @Inject constructor(
             }
 
             page.close()
+        }
+    }
+
+    private fun calculateBitmapDimensions(
+        pdf: Dimensions,
+        displayArea: Dimensions
+    ): Dimensions {
+        val pdfRatio = pdf.height.toDouble() / pdf.width.toDouble()
+        val deviceRatio = displayArea.height.toDouble() / displayArea.width.toDouble()
+        return if (deviceRatio > pdfRatio) {
+            // 端末の方が縦長である場合は横幅を目一杯広げる
+            // つまり、生成する Bitmap の width は表示領域と同じなり、
+            // height には width の拡大/縮小した比率を適用する。
+            Dimensions(
+                width = displayArea.width,
+                height = ((displayArea.width.toDouble() / pdf.width.toDouble()) * pdf.height).toInt()
+            )
+        } else {
+            Dimensions(
+                width = ((displayArea.height.toDouble() / pdf.height.toDouble()) * pdf.width).toInt(),
+                height = displayArea.height
+            )
         }
     }
 }
