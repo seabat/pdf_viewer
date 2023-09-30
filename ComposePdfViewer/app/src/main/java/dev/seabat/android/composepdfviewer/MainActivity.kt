@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -42,10 +43,13 @@ import dev.seabat.android.composepdfviewer.ui.screen.pdfviewer.PdfViewerViewMode
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessScreen
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessViewModel
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
+import java.io.File
 import java.util.Date
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    val viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -53,6 +57,8 @@ class MainActivity : ComponentActivity() {
                 PdfViewerApp()
             }
         }
+
+        viewModel.copyPdfToInternalStorage()
     }
 }
 

@@ -1,13 +1,14 @@
 package dev.seabat.android.composepdfviewer.ui.screen.pdfviewer
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,7 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
@@ -32,7 +34,8 @@ fun PdfViewerScreen(
     val uiState by viewModel.uiState.collectAsState()
     PdfViewerScreenContent(
         uiState = uiState,
-        readPage = { pageNo -> viewModel.readAhead(pageNo)}
+        readPage = { pageNo -> viewModel.readAhead(pageNo) },
+        extractPageCount = { viewModel.extractPageCount() }
     )
 }
 
@@ -41,17 +44,18 @@ fun PdfViewerScreen(
 fun PdfViewerScreenContent(
     uiState: PdfViewerUiState,
     modifier: Modifier = Modifier,
-    readPage: (pageNo: Int) -> Unit
+    extractPageCount: () -> Int,
+    readPage: (pageNo: Int) -> Unit,
 ) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = {
-            uiState.totalPageCount
+            extractPageCount()
         }
     )
 
     LaunchedEffect(pagerState.currentPage) {
-        readPage(pagerState.currentPage + 1)
+        readPage(pagerState.currentPage)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -59,11 +63,14 @@ fun PdfViewerScreenContent(
             state = pagerState,
             modifier = Modifier.background(viewer_background).fillMaxSize()
         ) { pageIndex ->
-            Text(
-                text = "Page: ${uiState.currentPageNo}",
-                modifier = Modifier.padding(16.dp).fillMaxSize().background(Color.White),
-                textAlign = TextAlign.Center
-            )
+            uiState.bitmap?.let {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.padding(16.dp).fillMaxSize().background(Color.White),
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
         if (uiState.state == UiStateType.Loading) {
             Box(modifier = Modifier.align(Alignment.Center)) {
