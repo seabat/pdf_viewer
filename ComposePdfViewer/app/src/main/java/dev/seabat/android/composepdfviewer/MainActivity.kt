@@ -8,16 +8,10 @@ import androidx.activity.viewModels
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.ui.PdfViewerAppBar
+import dev.seabat.android.composepdfviewer.ui.appbar.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screen.Screen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListScreen
 import dev.seabat.android.composepdfviewer.ui.screen.all.AllListViewModel
@@ -45,7 +39,6 @@ import dev.seabat.android.composepdfviewer.ui.screen.pdfviewer.PdfViewerViewMode
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessScreen
 import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessViewModel
 import dev.seabat.android.composepdfviewer.ui.theme.ComposePdfViewerTheme
-import java.io.File
 import java.util.Date
 
 @AndroidEntryPoint
