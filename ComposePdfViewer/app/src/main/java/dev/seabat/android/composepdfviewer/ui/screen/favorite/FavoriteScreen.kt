@@ -1,6 +1,7 @@
 package dev.seabat.android.composepdfviewer.ui.screen.favorite
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
@@ -29,33 +30,14 @@ fun FavoriteScreen(
     viewModel: FavoriteViewModel = FavoriteViewModel(),
     onClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
+    Box(
+        modifier = modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.teal_700))
-            .wrapContentSize(Alignment.Center)
     ) {
-        Counter()
-    }
-}
-
-@Composable
-fun Counter() {
-    val count = remember { mutableIntStateOf(0) }
-    SideEffect {
-        Timber.i("Counter  [${count.value}]")
-    }
-
-    Column {
-        Timber.i("Column")
-        Button(onClick = { count.value++ }) {
-            Timber.i("Button1")
-            Text("Ref Count ${count.value}")
-        }
-        Button(onClick = {}) {
-            Timber.i("Button2")
-            Text("Without Ref Count")
-        }
+        Text(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            text = "Aligned to bottom end"
+        )
     }
 }
 
