@@ -2,6 +2,14 @@ package dev.seabat.android.composepdfviewer
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 @HiltAndroidApp
-class PdfViewerApplication : Application()
+class PdfViewerApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(TimberSetting(this))
+        }
+    }
+}
