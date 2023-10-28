@@ -20,12 +20,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.seabat.android.composepdfviewer.MainViewModel
+import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.appbar.PickPdf
 
 @Composable
 fun PdfViewerAppBar(
-    shouldShowTopClose: Boolean,
     navController: NavHostController,
+    onPdfImported: ((PdfEntity) -> Unit)? = null
 ) {
     val viewModel = hiltViewModel<MainViewModel>()
 
@@ -42,7 +43,7 @@ fun PdfViewerAppBar(
             )
         },
         backgroundColor = MaterialTheme.colorScheme.primary,
-        navigationIcon = if (shouldShowTopClose) {
+        navigationIcon = if (currentScreen.shouldShowTopClose) {
             {
                 IconButton(
                     onClick = {
@@ -55,10 +56,20 @@ fun PdfViewerAppBar(
         } else {
             null
         },
-        actions = {
-            AddFileAction(
-                onPdfSelected = { uri -> viewModel.onPdfSelected(uri) }
-            )
+        actions = if (currentScreen.shouldShowAddAction) {
+            {
+                AddFileAction(
+                    onPdfSelected = { uri ->
+                        viewModel.importPdf(uri) { pdf ->
+                            if (onPdfImported != null) {
+                                onPdfImported(pdf)
+                            }
+                        }
+                    }
+                )
+            }
+        } else {
+            {}
         }
     )
 }

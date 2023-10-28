@@ -12,31 +12,41 @@ sealed class Screen(
     val route: String, // Navigation の route
     @StringRes val appBarTitleResId: Int,
     @StringRes val bottomLabelResId: Int?,
-    val image: ImageVector
+    val image: ImageVector,
+    val shouldShowTopClose: Boolean,
+    val shouldShowAddAction: Boolean,
 ) {
     object Recentness : Screen(
         "recentness",
         R.string.recentness,
         R.string.recentness,
-        Icons.Filled.DateRange
+        Icons.Filled.DateRange,
+        false,
+        true
     )
     object Favorite : Screen(
         "favorite",
         R.string.favorite,
         R.string.favorite,
-        Icons.Filled.Favorite
+        Icons.Filled.Favorite,
+        false,
+        true
     )
     object AllList : Screen(
         "all",
         R.string.all,
         R.string.all,
-        Icons.Filled.List
+        Icons.Filled.List,
+        false,
+        true
     )
     object PdfViewer : Screen(
         "pdf_viewer",
         R.string.pdf_viewer,
         null,
-        Icons.Filled.List
+        Icons.Filled.List,
+        true,
+        false
     )
 }
 

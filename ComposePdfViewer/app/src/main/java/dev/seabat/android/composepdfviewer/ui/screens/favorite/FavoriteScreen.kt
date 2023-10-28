@@ -21,7 +21,6 @@ fun FavoriteScreen(
     Scaffold(
         topBar = {
             PdfViewerAppBar(
-                shouldShowTopClose = true,
                 navController = navController
             )
         },

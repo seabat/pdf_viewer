@@ -31,7 +31,7 @@ import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
 import java.lang.Exception
-import java.util.Date
+import java.time.ZonedDateTime
 
 @Composable
 fun RecentnessScreen(
@@ -44,7 +44,6 @@ fun RecentnessScreen(
     Scaffold(
         topBar = {
             PdfViewerAppBar(
-                shouldShowTopClose = false,
                 navController = navController
             )
         },
@@ -105,7 +104,7 @@ fun PdfItem(
         Column(verticalArrangement = Arrangement.Center) {
             Text(pdf.title, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
             Text(
-                pdf.description,
+                pdf.description ?: "",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(fontSize = 12.sp, color = Color.Gray),
@@ -122,11 +121,11 @@ fun `Loaded状態のHomeScreenContent`() {
             state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
                 mutableListOf(
-                    PdfEntity("title1", "desc1", 178, Date()),
-                    PdfEntity("title2", "desc2", 298, Date()),
-                    PdfEntity("title3", "desc3", 587, Date()),
-                    PdfEntity("title4", "desc4", 319, Date()),
-                    PdfEntity("title5", "desc5", 287, Date())
+                    PdfEntity("title1", "desc1", 178, ZonedDateTime.now()),
+                    PdfEntity("title2", "desc2", 298, ZonedDateTime.now()),
+                    PdfEntity("title3", "desc3", 587, ZonedDateTime.now()),
+                    PdfEntity("title4", "desc4", 319, ZonedDateTime.now()),
+                    PdfEntity("title5", "desc5", 287, ZonedDateTime.now())
                 )
             )
         ),

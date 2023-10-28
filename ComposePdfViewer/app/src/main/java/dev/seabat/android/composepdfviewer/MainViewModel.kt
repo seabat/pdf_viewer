@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.seabat.android.composepdfviewer.utils.getFileName
+import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.utils.getFileInfoFromUri
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.io.File
-import java.net.URI
+import java.io.FileOutputStream
+import java.time.ZonedDateTime
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -28,22 +30,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onPdfSelected(uri: Uri) {
-        val fileName = getFileName(uri, context)
-        fileName?.let {
-            copyPdfToInternalStorage(fileName, uri)
+    fun importPdf(uri: Uri, onImported: (PdfEntity) -> Unit) {
+        val fileInfo = getFileInfoFromUri(context, uri) ?: return
+        fileInfo.first ?.let { fileName ->
+            copyPdfToInternalStorage(fileName, uri) {
+                onImported(PdfEntity(fileName, null, fileInfo.second, ZonedDateTime.now()))
+            }
         }
     }
 
-    private fun copyPdfToInternalStorage(fileName: String, uri: Uri) {
+    private fun copyPdfToInternalStorage(fileName: String, uri: Uri, onImported: (String) -> Unit) {
         viewModelScope.launch {
-            val outputFile = File(context.filesDir, fileName)
-            val inputFile = File(URI.create(uri.toString()))
-            inputFile.inputStream().use { inputStream ->
-                outputFile.outputStream().use { outputStream ->
-                    inputStream.copyTo(outputStream)
-                }
-            }
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return@launch
+            val file = File(context.filesDir, fileName)
+            val outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+            inputStream.close()
+            outputStream.close()
+            onImported(fileName)
         }
     }
 }

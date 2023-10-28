@@ -29,8 +29,10 @@ fun AllListScreen(
     Scaffold(
         topBar = {
             PdfViewerAppBar(
-                shouldShowTopClose = false,
-                navController = navController
+                navController = navController,
+                onPdfImported = { pdf ->
+                    navController.navigate("pdf_viewer" + "/?pdf=" + "pdfのJSONデータ")
+                }
             )
         },
         bottomBar = {

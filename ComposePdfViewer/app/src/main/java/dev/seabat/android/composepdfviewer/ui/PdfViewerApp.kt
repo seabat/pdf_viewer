@@ -2,14 +2,12 @@ package dev.seabat.android.composepdfviewer.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
@@ -25,7 +23,7 @@ import dev.seabat.android.composepdfviewer.ui.screens.Screen.AllList
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.Favorite
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.PdfViewer
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.Recentness
-import java.util.Date
+import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -79,7 +77,7 @@ fun PdfViewerNavHost(
                 PdfViewerScreen(
                     viewModel = viewModel,
                     navController = navController,
-                    pdf = PdfEntity("title1", "desc1", 178, Date()),
+                    pdf = PdfEntity("title1", "desc1", 178, ZonedDateTime.now()),
                 )
             }
         }

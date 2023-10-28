@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.documentfile:documentfile:1.0.1")
     val navVersion = "2.7.1"
 
     // Hilt
