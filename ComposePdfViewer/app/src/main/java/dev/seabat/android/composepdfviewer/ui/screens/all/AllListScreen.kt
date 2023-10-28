@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screen.all
+package dev.seabat.android.composepdfviewer.ui.screens.all
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.UiStateType
-import dev.seabat.android.composepdfviewer.ui.component.ErrorComponent
-import dev.seabat.android.composepdfviewer.ui.component.LoadingComponent
-import dev.seabat.android.composepdfviewer.ui.screen.recentness.PdfItem
+import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
+import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
+import dev.seabat.android.composepdfviewer.ui.screens.recentness.PdfItem
 
 @Composable
 fun AllListScreen(

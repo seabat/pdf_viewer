@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screen.recentness
+package dev.seabat.android.composepdfviewer.ui.screens.recentness
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,10 +21,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.seabat.android.composepdfviewer.ui.component.LoadingComponent
+import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
-import dev.seabat.android.composepdfviewer.ui.component.ErrorComponent
+import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
 import dev.seabat.android.composepdfviewer.ui.UiStateType
 import java.lang.Exception
 import java.util.Date

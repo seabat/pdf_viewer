@@ -1,12 +1,10 @@
-package dev.seabat.android.composepdfviewer.ui.screen.all
+package dev.seabat.android.composepdfviewer.ui.screens.recentness
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
-import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
-import dev.seabat.android.composepdfviewer.domain.usecase.FetchAllListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
 import dev.seabat.android.composepdfviewer.ui.UiStateType
 import kotlinx.coroutines.Job
@@ -19,15 +17,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AllListViewModel @Inject constructor(
-    private val fetchAllListUseCase: FetchAllListUseCaseContract,
-    private val addRecentnessUseCase: AddRecentnessListUseCaseContract
+class RecentnessViewModel @Inject constructor(
+    private val fetchRecentnessListUseCase: FetchRecentnessListUseCaseContract
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(AllListUiState())
-    val uiState: StateFlow<AllListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(RecentnessUiState())
+    val uiState: StateFlow<RecentnessUiState> = _uiState.asStateFlow()
 
     private var fetchJob: Job? = null
-    private var addJob: Job? = null
 
     init {
         fetch()
@@ -35,7 +31,6 @@ class AllListViewModel @Inject constructor(
 
     override fun onCleared() {
         fetchJob?.cancel()
-        addJob?.cancel()
         super.onCleared()
     }
 
@@ -50,27 +45,10 @@ class AllListViewModel @Inject constructor(
         fetch()
     }
 
-    fun addRecentness(pdf: PdfEntity, onAddCompleted: () -> Unit) {
-        addJob = viewModelScope.launch {
-            when (val result =addRecentnessUseCase(pdf)) {
-                is UseCaseResult.Success -> {
-                    onAddCompleted()
-                }
-                is UseCaseResult.Failure -> {
-                    _uiState.update {
-                        it.copy(
-                            state = UiStateType.Error(result.e),
-                        )
-                    }
-                }
-            }
-        }
-    }
-
     private fun fetch() {
         fetchJob = viewModelScope.launch {
             delay(1000)
-            when (val result =fetchAllListUseCase()) {
+            when (val result =fetchRecentnessListUseCase()) {
                 is UseCaseResult.Success -> {
                     _uiState.update {
                         it.copy(
@@ -89,5 +67,4 @@ class AllListViewModel @Inject constructor(
             }
         }
     }
-
 }

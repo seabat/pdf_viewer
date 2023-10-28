@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screen
+package dev.seabat.android.composepdfviewer.ui.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

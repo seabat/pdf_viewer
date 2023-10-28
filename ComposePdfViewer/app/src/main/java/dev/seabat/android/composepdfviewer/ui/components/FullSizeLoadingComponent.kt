@@ -1,6 +1,7 @@
-package dev.seabat.android.composepdfviewer.ui.component
+package dev.seabat.android.composepdfviewer.ui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -10,9 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun WrapLoadingComponent() {
+fun LoadingComponent() {
     Box(
         modifier = Modifier
+            .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -21,6 +23,6 @@ fun WrapLoadingComponent() {
 
 @Preview
 @Composable
-fun PreviewLSmallLoadingComponent() {
-    WrapLoadingComponent()
+fun PreviewLoadingComponent() {
+    LoadingComponent()
 }

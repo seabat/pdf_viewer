@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screen.pdfviewer
+package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
 import android.content.Context
 import android.graphics.Bitmap

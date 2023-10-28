@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.component
+package dev.seabat.android.composepdfviewer.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

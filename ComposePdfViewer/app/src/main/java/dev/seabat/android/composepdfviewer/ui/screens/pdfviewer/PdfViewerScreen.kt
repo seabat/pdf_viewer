@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screen.pdfviewer
+package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
 import android.app.Activity
 import android.graphics.Insets
@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.UiStateType
-import dev.seabat.android.composepdfviewer.ui.component.WrapLoadingComponent
+import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
 import dev.seabat.android.composepdfviewer.ui.theme.viewer_background
 
 const val IMAGE_VIEW_PADDING_SIZE = 16

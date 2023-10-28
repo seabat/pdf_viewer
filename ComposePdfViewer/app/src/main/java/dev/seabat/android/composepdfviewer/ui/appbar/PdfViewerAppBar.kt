@@ -20,8 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.MainViewModel
 import dev.seabat.android.composepdfviewer.ScaffoldState
-import dev.seabat.android.composepdfviewer.ui.screen.Screen
-import dev.seabat.android.composepdfviewer.ui.screen.recentness.RecentnessViewModel
+import dev.seabat.android.composepdfviewer.ui.screens.Screen
 
 @Composable
 fun PdfViewerAppBar(
