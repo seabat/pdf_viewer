@@ -2,45 +2,45 @@ package dev.seabat.android.composepdfviewer.ui.screens.favorite
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ElevatedButton
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
 
 @Composable
 fun FavoriteScreen(
     modifier: Modifier = Modifier,
-    viewModel: FavoriteViewModel = FavoriteViewModel(),
-    onClick: () -> Unit
+    viewModel: FavoriteViewModel,
+    navController: NavHostController
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            modifier = Modifier.align(Alignment.BottomEnd),
-            text = "Aligned to bottom end"
-        )
-    }
-}
-
-@Composable
-fun Greeting(name: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    ElevatedButton(onClick = { onClick() }) {
-        Text(
-            text = "$name!",
+    Scaffold(
+        topBar = {
+            PdfViewerAppBar(
+                shouldShowTopClose = true,
+                navController = navController
+            )
+        },
+        bottomBar = {
+            PdfViewerBottomNavigation(
+                navController = navController,
+            )
+        }
+    ) { paddingValues ->
+        Box(
             modifier = modifier
-        )
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                text = "Aligned to bottom end"
+            )
+        }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Greeting(
-        name = "最近見たファイルへ",
-        onClick = { /* Do nothing */ }
-    )
-}

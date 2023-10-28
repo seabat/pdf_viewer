@@ -1,10 +1,10 @@
 package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
-import dev.seabat.android.composepdfviewer.ui.UiStateType
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import android.graphics.Bitmap
 
 data class PdfViewerUiState (
-    val state: UiStateType = UiStateType.Loading,
+    val state: ScreenStateType = ScreenStateType.Loading,
     val currentPageNo: Int = 0,
     val bitmap: Bitmap? = null,
     val zoom: ZoomType = ZoomType.ZoomNone

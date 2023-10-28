@@ -6,7 +6,7 @@ import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.seabat.android.composepdfviewer.ui.UiStateType
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -25,7 +25,7 @@ class PdfViewerViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<PdfViewerUiState>(
         PdfViewerUiState(
-            state = UiStateType.Loading,
+            state = ScreenStateType.Loading,
             currentPageNo = 0,
             bitmap = null,
             zoom = ZoomType.ZoomNone
@@ -69,7 +69,7 @@ class PdfViewerViewModel @Inject constructor(
         renderingJob = viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    state = UiStateType.Loading,
+                    state = ScreenStateType.Loading,
                 )
             }
 
@@ -101,7 +101,7 @@ class PdfViewerViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     currentPageNo = pageNo,
-                    state = UiStateType.Loaded,
+                    state = ScreenStateType.Loaded,
                     bitmap = bitmap,
                     zoom = zoomType
                 )

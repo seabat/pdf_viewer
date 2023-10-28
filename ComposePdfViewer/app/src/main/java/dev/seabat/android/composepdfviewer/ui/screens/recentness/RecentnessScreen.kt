@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,11 +22,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
-import dev.seabat.android.composepdfviewer.ui.UiStateType
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
 import java.lang.Exception
 import java.util.Date
 
@@ -33,15 +37,30 @@ import java.util.Date
 fun RecentnessScreen(
     modifier: Modifier = Modifier,
     viewModel: RecentnessViewModel,
-    onClick: () -> Unit
+    navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    RecentnessScreenContent(
-        uiState = uiState,
-        onRefresh = { viewModel.reload() },
-        onClick = {}
-    )
+    Scaffold(
+        topBar = {
+            PdfViewerAppBar(
+                shouldShowTopClose = false,
+                navController = navController
+            )
+        },
+        bottomBar = {
+            PdfViewerBottomNavigation(
+                navController = navController,
+            )
+        }
+    ) { paddingValues ->
+        RecentnessScreenContent(
+            uiState = uiState,
+            onRefresh = { viewModel.reload() },
+            modifier = Modifier.padding(paddingValues),
+            onClick = {}
+        )
+    }
 }
 
 @Composable
@@ -52,18 +71,18 @@ fun RecentnessScreenContent(
     onClick: (PdfEntity) -> Unit,
 ) {
     when (uiState.state) {
-       is UiStateType.Loading -> {
+       is ScreenStateType.Loading -> {
            LoadingComponent()
        }
-       is UiStateType.Loaded -> {
-           LazyColumn {
+       is ScreenStateType.Loaded -> {
+           LazyColumn(modifier) {
                uiState.pdfs.forEach { pdf ->
                    item { PdfItem(pdf = pdf, onClick = onClick) }
                    item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                }
            }
         }
-        is UiStateType.Error -> {
+        is ScreenStateType.Error -> {
            ErrorComponent(uiState.state.e) {
                onRefresh()
            }
@@ -100,7 +119,7 @@ fun PdfItem(
 fun `Loaded状態のHomeScreenContent`() {
     RecentnessScreenContent(
         uiState = RecentnessUiState(
-            state = UiStateType.Loaded,
+            state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
                 mutableListOf(
                     PdfEntity("title1", "desc1", 178, Date()),
@@ -121,7 +140,7 @@ fun `Loaded状態のHomeScreenContent`() {
 fun `Loading状態のHomeScreenContent`() {
     RecentnessScreenContent(
         uiState = RecentnessUiState(
-            state = UiStateType.Loading,
+            state = ScreenStateType.Loading,
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
@@ -134,7 +153,7 @@ fun `Loading状態のHomeScreenContent`() {
 fun `Error状態のHomeScreenContent`() {
     RecentnessScreenContent(
         uiState = RecentnessUiState(
-            state = UiStateType.Error(Exception("エラー内容")),
+            state = ScreenStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},

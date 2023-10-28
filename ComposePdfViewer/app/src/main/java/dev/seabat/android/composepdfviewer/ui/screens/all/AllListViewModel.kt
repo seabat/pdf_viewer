@@ -8,7 +8,7 @@ import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchAllListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
-import dev.seabat.android.composepdfviewer.ui.UiStateType
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,7 @@ class AllListViewModel @Inject constructor(
     fun reload() {
         _uiState.update {
             it.copy(
-                state = UiStateType.Loading,
+                state = ScreenStateType.Loading,
                 pdfs = PdfListEntity(mutableListOf())
             )
         }
@@ -59,7 +59,7 @@ class AllListViewModel @Inject constructor(
                 is UseCaseResult.Failure -> {
                     _uiState.update {
                         it.copy(
-                            state = UiStateType.Error(result.e),
+                            state = ScreenStateType.Error(result.e),
                         )
                     }
                 }
@@ -74,7 +74,7 @@ class AllListViewModel @Inject constructor(
                 is UseCaseResult.Success -> {
                     _uiState.update {
                         it.copy(
-                            state = UiStateType.Loaded,
+                            state = ScreenStateType.Loaded,
                             pdfs = result.data
                         )
                     }
@@ -82,7 +82,7 @@ class AllListViewModel @Inject constructor(
                 is UseCaseResult.Failure -> {
                     _uiState.update {
                         it.copy(
-                            state = UiStateType.Error(result.e),
+                            state = ScreenStateType.Error(result.e),
                         )
                     }
                 }

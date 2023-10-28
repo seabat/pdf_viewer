@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import dev.seabat.android.composepdfviewer.R
 
 sealed class Screen(
-    val route: String,
+    val route: String, // Navigation の route
     @StringRes val appBarTitleResId: Int,
     @StringRes val bottomLabelResId: Int?,
     val image: ImageVector

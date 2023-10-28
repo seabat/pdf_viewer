@@ -19,6 +19,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,10 +31,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.ui.UiStateType
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
 import dev.seabat.android.composepdfviewer.ui.theme.viewer_background
 
 const val IMAGE_VIEW_PADDING_SIZE = 16
@@ -42,17 +45,34 @@ const val IMAGE_VIEW_PADDING_SIZE = 16
 @Composable
 fun PdfViewerScreen(
     modifier: Modifier = Modifier,
-    viewModel: PdfViewerViewModel = hiltViewModel(),
+    viewModel: PdfViewerViewModel,
+    navController: NavHostController,
     pdf: PdfEntity,
 ) {
     val activity = LocalContext.current as ComponentActivity
     val uiState by viewModel.uiState.collectAsState()
-    PdfViewerScreenContent(
-        uiState = uiState,
-        readPage = { pageNo -> viewModel.readAhead(pageNo, getImageViewDimensions(activity)) },
-        extractPageCount = { viewModel.extractPageCount() },
-        onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
-    )
+
+    Scaffold(
+        topBar = {
+            PdfViewerAppBar(
+                shouldShowTopClose = true,
+                navController = navController
+            )
+        },
+        bottomBar = {
+            PdfViewerBottomNavigation(
+                navController = navController,
+            )
+        }
+    ) { paddingValues ->
+        PdfViewerScreenContent(
+            uiState = uiState,
+            modifier = modifier.padding(paddingValues),
+            readPage = { pageNo -> viewModel.readAhead(pageNo, getImageViewDimensions(activity)) },
+            extractPageCount = { viewModel.extractPageCount() },
+            onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
+        )
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -76,7 +96,7 @@ fun PdfViewerScreenContent(
         readPage(pagerState.currentPage)
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -110,7 +130,7 @@ fun PdfViewerScreenContent(
                 }
             }
         }
-        if (uiState.state == UiStateType.Loading) {
+        if (uiState.state == ScreenStateType.Loading) {
             Box(modifier = Modifier.align(Alignment.Center)) {
                 WrapLoadingComponent()
             }

@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.appbar
+package dev.seabat.android.composepdfviewer.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,23 +12,28 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.seabat.android.composepdfviewer.MainViewModel
-import dev.seabat.android.composepdfviewer.ScaffoldState
-import dev.seabat.android.composepdfviewer.ui.screens.Screen
+import dev.seabat.android.composepdfviewer.ui.appbar.PickPdf
 
 @Composable
 fun PdfViewerAppBar(
+    shouldShowTopClose: Boolean,
     navController: NavHostController,
-    currentScreen: Screen,
-    scaffoldState: State<ScaffoldState>,
 ) {
     val viewModel = hiltViewModel<MainViewModel>()
+
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = getScreen(
+        backStackEntry?.destination?.route ?: Screen.Favorite.route
+    )
+
     TopAppBar(
         title = {
             Text(
@@ -37,7 +42,7 @@ fun PdfViewerAppBar(
             )
         },
         backgroundColor = MaterialTheme.colorScheme.primary,
-        navigationIcon = if (scaffoldState.value.shouldShowTopClose) {
+        navigationIcon = if (shouldShowTopClose) {
             {
                 IconButton(
                     onClick = {
