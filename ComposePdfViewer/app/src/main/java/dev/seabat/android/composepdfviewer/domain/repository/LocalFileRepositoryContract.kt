@@ -23,6 +23,15 @@ interface LocalFileRepositoryContract {
     suspend fun add(uri: Uri): PdfEntity
 
     /**
+     * アセットファイルをアプリのプライベート領域の files ディレクトリに追加する
+     *
+     * @return
+     */
+    @Throws(PdfViewerException::class)
+    suspend fun importAssetsFile(): PdfEntity
+
+
+    /**
      * アプリのプライベート領域の files ディレクトリに格納されたファイルを削除する
      *
      * @param fileName ex. sample.pdf

@@ -71,6 +71,28 @@ class LocalFileRepository @Inject constructor(
     }
 
     /**
+     * アセットファイルをアプリのプライベート領域の files ディレクトリに追加する
+     *
+     * @return
+     */
+    @Throws(PdfViewerException::class)
+    override suspend fun importAssetsFile(): PdfEntity {
+        val outputFile = File(context.filesDir, "sample.pdf")
+        runCatching {
+            context.assets.open("sample.pdf").use { inputStream ->
+                outputFile.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        }.onFailure {
+            throw PdfViewerException("サンプルのインポートに失敗しました")
+        }
+
+        val fileDateTimeString = getFileTimeStamp(outputFile).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+        return PdfEntity(outputFile.name, outputFile.name, outputFile.length(), fileDateTimeString)
+    }
+
+    /**
      * アプリのプライベート領域の files ディレクトリに格納されたファイルを削除する
      *
      * @param fileName ex. sample.pdf

@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.seabat.android.composepdfviewer.MainViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.appbar.PickPdf
 
@@ -28,7 +27,7 @@ fun PdfViewerAppBar(
     navController: NavHostController,
     onPdfImported: ((PdfEntity) -> Unit)? = null
 ) {
-    val viewModel = hiltViewModel<MainViewModel>()
+    val viewModel = hiltViewModel<PdfViewerAppBarViewModel>()
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = getScreen(

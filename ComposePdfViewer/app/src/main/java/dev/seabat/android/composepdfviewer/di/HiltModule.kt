@@ -21,6 +21,8 @@ import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUse
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCaseContract
 import javax.inject.Singleton
 
 @Module
@@ -53,6 +55,10 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindImportFileUseCase(useCase: ImportFileUseCase): ImportFileUseCaseContract
+
+    @Singleton
+    @Binds
+    abstract fun bindImportSampleUseCase(useCase: ImportSampleUseCase): ImportSampleUseCaseContract
 }
 
 @Module
