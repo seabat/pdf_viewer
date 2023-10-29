@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
@@ -84,6 +85,10 @@ dependencies {
 
     // Log
     implementation ("com.jakewharton.timber:timber:5.0.1")
+
+    // Moshi
+    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
 
     // Test
     testImplementation("junit:junit:4.13.2")

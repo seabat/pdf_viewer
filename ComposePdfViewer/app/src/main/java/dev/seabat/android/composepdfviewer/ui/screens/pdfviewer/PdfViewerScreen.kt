@@ -68,7 +68,7 @@ fun PdfViewerScreen(
             uiState = uiState,
             modifier = modifier.padding(paddingValues),
             readPage = { pageNo -> viewModel.readAhead(pageNo, getImageViewDimensions(activity)) },
-            extractPageCount = { viewModel.extractPageCount() },
+            extractPageCount = { viewModel.extractPageCount(pdf.pathString) },
             onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
         )
     }

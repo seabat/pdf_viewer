@@ -13,6 +13,7 @@ import javax.inject.Inject
 import java.io.File
 import java.io.FileOutputStream
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -34,7 +35,7 @@ class MainViewModel @Inject constructor(
         val fileInfo = getFileInfoFromUri(context, uri) ?: return
         fileInfo.first ?.let { fileName ->
             copyPdfToInternalStorage(fileName, uri) {
-                onImported(PdfEntity(fileName, null, fileInfo.second, ZonedDateTime.now()))
+                onImported(PdfEntity(fileName, fileName, fileInfo.second, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)))
             }
         }
     }

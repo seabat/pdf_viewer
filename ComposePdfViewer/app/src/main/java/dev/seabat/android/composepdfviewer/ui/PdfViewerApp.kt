@@ -24,6 +24,7 @@ import dev.seabat.android.composepdfviewer.ui.screens.Screen.Favorite
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.PdfViewer
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.Recentness
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -70,15 +71,16 @@ fun PdfViewerNavHost(
             route = "${PdfViewer.route}/?pdf={pdf}",
             arguments = listOf(navArgument("pdf") { type = NavType.StringType }),
         ) {backStackEntry ->
-            val pdfJson = backStackEntry.arguments?.getString("pdf")
-            pdfJson?.let {
-                //TODO: pdfJson を PDF オブジェクトに変換する
-                val viewModel = hiltViewModel<PdfViewerViewModel>()
-                PdfViewerScreen(
-                    viewModel = viewModel,
-                    navController = navController,
-                    pdf = PdfEntity("title1", "desc1", 178, ZonedDateTime.now()),
-                )
+            val jsonString = backStackEntry.arguments?.getString("pdf")
+            jsonString?.let { json ->
+                PdfEntity.convertJsonToObject(json)?.let { pdfEntity ->
+                    val viewModel = hiltViewModel<PdfViewerViewModel>()
+                    PdfViewerScreen(
+                        viewModel = viewModel,
+                        navController = navController,
+                        pdf = pdfEntity,
+                    )
+                }
             }
         }
     }

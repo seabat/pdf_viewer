@@ -42,8 +42,8 @@ class PdfViewerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun extractPageCount(): Int {
-        val file = File(context.filesDir, "sample.pdf")
+    fun extractPageCount(filePath: String): Int {
+        val file = File(context.filesDir, filePath)
         try {
             val parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
             pdfRenderer = PdfRenderer(parcelFileDescriptor)
