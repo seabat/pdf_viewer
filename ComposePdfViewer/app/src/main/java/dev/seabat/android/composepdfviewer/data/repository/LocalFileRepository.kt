@@ -30,7 +30,7 @@ class LocalFileRepository @Inject constructor(
     override suspend fun fetch(): PdfListEntity {
         return withContext(Dispatchers.IO) {
             val filesDir = context.filesDir
-            val fileList = filesDir.listFiles{ _, name ->
+            val fileList = filesDir.listFiles { _, name ->
                 name.lowercase(Locale.ROOT).endsWith(".pdf")
             } ?: return@withContext PdfListEntity(mutableListOf())
 
@@ -49,11 +49,11 @@ class LocalFileRepository @Inject constructor(
      */
     @Throws(PdfViewerException::class)
     override suspend fun add(uri: Uri): PdfEntity {
-        val fileInfo = getFileInfoFromUri(context, uri) ?: return throw PdfViewerException("Uri からファイル情報を取得できませんでした")
+        val fileInfo = getFileInfoFromUri(context, uri) ?: throw PdfViewerException("Uri からファイル情報を取得できませんでした")
         return fileInfo.first?.let { fileName ->
             copyPdfToInternalStorage(fileName, uri)
             PdfEntity(fileName, fileName, fileInfo.second, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
-        } ?: return throw PdfViewerException("Uri からファイル名を取得できませんでした")
+        } ?: throw PdfViewerException("Uri からファイル名を取得できませんでした")
     }
 
     @Throws(PdfViewerException::class)
@@ -68,6 +68,28 @@ class LocalFileRepository @Inject constructor(
         }.onFailure {
             throw PdfViewerException("ファイルのコピーに失敗しました")
         }
+    }
+
+    /**
+     * アセットファイルをアプリのプライベート領域の files ディレクトリに追加する
+     *
+     * @return
+     */
+    @Throws(PdfViewerException::class)
+    override suspend fun importAssetsFile(): PdfEntity {
+        val outputFile = File(context.filesDir, "sample.pdf")
+        runCatching {
+            context.assets.open("sample.pdf").use { inputStream ->
+                outputFile.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        }.onFailure {
+            throw PdfViewerException("サンプルのインポートに失敗しました")
+        }
+
+        val fileDateTimeString = getFileTimeStamp(outputFile).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+        return PdfEntity(outputFile.name, outputFile.name, outputFile.length(), fileDateTimeString)
     }
 
     /**

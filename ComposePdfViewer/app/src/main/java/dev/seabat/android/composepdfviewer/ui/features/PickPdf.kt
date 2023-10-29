@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.appbar
+package dev.seabat.android.composepdfviewer.ui.features
 
 import android.content.Context
 import android.content.Intent
