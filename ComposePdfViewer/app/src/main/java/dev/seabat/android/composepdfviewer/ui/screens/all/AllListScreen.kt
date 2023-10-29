@@ -46,9 +46,10 @@ fun AllListScreen(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
-            onClick = {
-                viewModel.addRecentness(it) {
-                    navController.navigate("pdf_viewer" + "/?pdf=" + "pdfのJSONデータ")
+            onClick = { pdf ->
+                viewModel.addRecentness(pdf) {
+                    val jsonString = PdfEntity.convertObjectToJson(pdf)
+                    navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
                 }
             }
         )

@@ -2,6 +2,6 @@ package dev.seabat.android.composepdfviewer.domain.usecase
 
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 
-interface FetchAllListUseCaseContract {
+interface FetchFileListUseCaseContract {
     suspend operator fun invoke(): UseCaseResult<PdfListEntity>
 }

@@ -7,17 +7,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.utils.getFileInfoFromUri
+import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCaseContract
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.io.File
-import java.io.FileOutputStream
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val importFileUseCase: ImportFileUseCaseContract,
 ) : ViewModel() {
 
     fun copyPdfToInternalStorage() {
@@ -31,24 +29,16 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun importPdf(uri: Uri, onImported: (PdfEntity) -> Unit) {
-        val fileInfo = getFileInfoFromUri(context, uri) ?: return
-        fileInfo.first ?.let { fileName ->
-            copyPdfToInternalStorage(fileName, uri) {
-                onImported(PdfEntity(fileName, fileName, fileInfo.second, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)))
-            }
-        }
-    }
-
-    private fun copyPdfToInternalStorage(fileName: String, uri: Uri, onImported: (String) -> Unit) {
+    /**
+     * Uri に配置された PDF ファイルをアプリのプライベート領域に import する
+     *
+     * @param uri
+     * @param onImported import が完了した際に呼ばれるコールバック
+     */
+    fun importPdfAsync(uri: Uri, onImported: (PdfEntity) -> Unit) {
         viewModelScope.launch {
-            val inputStream = context.contentResolver.openInputStream(uri) ?: return@launch
-            val file = File(context.filesDir, fileName)
-            val outputStream = FileOutputStream(file)
-            inputStream.copyTo(outputStream)
-            inputStream.close()
-            outputStream.close()
-            onImported(fileName)
+            val pdfEntity = importFileUseCase(uri)
+            onImported(pdfEntity)
         }
     }
 }

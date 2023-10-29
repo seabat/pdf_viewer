@@ -60,7 +60,7 @@ fun PdfViewerAppBar(
             {
                 AddFileAction(
                     onPdfSelected = { uri ->
-                        viewModel.importPdf(uri) { pdf ->
+                        viewModel.importPdfAsync(uri) { pdf ->
                             if (onPdfImported != null) {
                                 onPdfImported(pdf)
                             }
