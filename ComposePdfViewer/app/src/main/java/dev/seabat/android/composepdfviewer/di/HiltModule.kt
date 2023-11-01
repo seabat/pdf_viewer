@@ -10,11 +10,15 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import dev.seabat.android.composepdfviewer.data.repository.LocalFileRepository
+import dev.seabat.android.composepdfviewer.data.repository.PdfMetadataRepository
 import dev.seabat.android.composepdfviewer.data.repository.RecentnessListRepository
 import dev.seabat.android.composepdfviewer.domain.repository.LocalFileRepositoryContract
+import dev.seabat.android.composepdfviewer.domain.repository.PdfMetadataRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.repository.RecentnessListRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFileListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFileListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCase
@@ -30,7 +34,11 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Singleton
     @Binds
-    abstract fun bindLocalFileRepository(repository: LocalFileRepository): LocalFileRepositoryContract
+    abstract fun bindPdfMetaDataRepository(repository: LocalFileRepository): LocalFileRepositoryContract
+
+    @Singleton
+    @Binds
+    abstract fun bindPdfMetadataRepository(repository: PdfMetadataRepository): PdfMetadataRepositoryContract
 
     @Singleton
     @Binds
@@ -43,6 +51,10 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindAddRecentnessListUseCase(useCase: AddRecentnessListUseCase): AddRecentnessListUseCaseContract
+
+    @Singleton
+    @Binds
+    abstract fun bindExtractPdfTitleUseCase(useCase: ExtractPdfTitleUseCase): ExtractPdfTitleUseCaseContract
 
     @Singleton
     @Binds

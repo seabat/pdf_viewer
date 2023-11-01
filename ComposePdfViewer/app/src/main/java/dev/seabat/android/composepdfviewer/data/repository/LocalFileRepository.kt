@@ -36,7 +36,12 @@ class LocalFileRepository @Inject constructor(
 
             val pdfEntities = fileList.toList().map {
                 val fileDateTimeString = getFileTimeStamp(it).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
-                PdfEntity(it.name, it.name, it.length(), fileDateTimeString)
+                PdfEntity(
+                    it.name,
+                    it.name,
+                    it.absolutePath,
+                    it.length(),
+                    fileDateTimeString)
             }
             PdfListEntity(pdfEntities.toMutableList())
         }
@@ -52,7 +57,13 @@ class LocalFileRepository @Inject constructor(
         val fileInfo = getFileInfoFromUri(context, uri) ?: throw PdfViewerException("Uri からファイル情報を取得できませんでした")
         return fileInfo.first?.let { fileName ->
             copyPdfToInternalStorage(fileName, uri)
-            PdfEntity(fileName, fileName, fileInfo.second, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+            PdfEntity(
+                fileName,
+                fileName,
+                "${context.filesDir.absolutePath}/${fileName}",
+                fileInfo.second,
+                ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+            )
         } ?: throw PdfViewerException("Uri からファイル名を取得できませんでした")
     }
 
@@ -89,7 +100,13 @@ class LocalFileRepository @Inject constructor(
         }
 
         val fileDateTimeString = getFileTimeStamp(outputFile).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
-        return PdfEntity(outputFile.name, outputFile.name, outputFile.length(), fileDateTimeString)
+        return PdfEntity(
+            outputFile.name,
+            outputFile.name,
+            "${context.filesDir.absolutePath}/${outputFile.name}",
+            outputFile.length(),
+            fileDateTimeString
+        )
     }
 
     /**

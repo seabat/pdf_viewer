@@ -105,7 +105,7 @@ fun PdfItem(
         Column(verticalArrangement = Arrangement.Center) {
             Text(pdf.title, style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
             Text(
-                pdf.pathString ?: "",
+                pdf.fileName ?: "",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(fontSize = 12.sp, color = Color.Gray),
@@ -122,11 +122,11 @@ fun `Loaded状態のHomeScreenContent`() {
             state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
                 mutableListOf(
-                    PdfEntity("title1", "desc1", 178, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title2", "desc2", 298, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title3", "desc3", 587, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title4", "desc4", 319, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title5", "desc5", 287, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+                    PdfEntity("title1", "desc1", "desc1",178, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
+                    PdfEntity("title2", "desc2", "desc1",298, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
+                    PdfEntity("title3", "desc3", "desc1",587, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
+                    PdfEntity("title4", "desc4", "desc1",319, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
+                    PdfEntity("title5", "desc5", "desc1",287, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
                 )
             )
         ),
