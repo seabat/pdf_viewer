@@ -25,10 +25,6 @@ class RecentnessViewModel @Inject constructor(
 
     private var fetchJob: Job? = null
 
-    init {
-        fetch()
-    }
-
     override fun onCleared() {
         fetchJob?.cancel()
         super.onCleared()

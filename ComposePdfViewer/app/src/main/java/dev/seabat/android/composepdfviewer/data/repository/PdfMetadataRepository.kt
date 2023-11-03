@@ -13,6 +13,7 @@ import javax.inject.Inject
 class PdfMetadataRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ): PdfMetadataRepositoryContract {
+
    override fun extractPdfTitle(pdfFilePath: String): String? {
         val titleResult = runCatching {
             PDFBoxResourceLoader.init(context)
