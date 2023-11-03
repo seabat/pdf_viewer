@@ -26,28 +26,35 @@ class AllListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AllListUiState())
     val uiState: StateFlow<AllListUiState> = _uiState.asStateFlow()
 
-    private var fetchJob: Job? = null
+    private var initJob: Job? = null
+    private var reloadJob: Job? = null
     private var addJob: Job? = null
 
     init {
-        fetch()
+        initJob = viewModelScope.launch {
+            fetch()
+        }
     }
 
     override fun onCleared() {
-        fetchJob?.cancel()
+        initJob?.cancel()
+        reloadJob?.cancel()
         addJob?.cancel()
         super.onCleared()
     }
 
     fun reload() {
-        _uiState.update {
-            it.copy(
-                state = ScreenStateType.Loading,
-                pdfs = PdfListEntity(mutableListOf())
-            )
+        reloadJob = viewModelScope.launch {
+            delay(1000)
+            _uiState.update {
+                it.copy(
+                    state = ScreenStateType.Loading,
+                    pdfs = PdfListEntity(mutableListOf())
+                )
+            }
+            reloadJob?.cancel()
+            fetch()
         }
-        fetchJob?.cancel()
-        fetch()
     }
 
     fun addRecentness(pdf: PdfEntity, onAddCompleted: () -> Unit) {
@@ -67,27 +74,23 @@ class AllListViewModel @Inject constructor(
         }
     }
 
-    private fun fetch() {
-        fetchJob = viewModelScope.launch {
-            delay(1000)
-            when (val result = fetchFileListUseCase()) {
-                is UseCaseResult.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            state = ScreenStateType.Loaded,
-                            pdfs = result.data
-                        )
-                    }
+    private suspend fun fetch() {
+        when (val result = fetchFileListUseCase()) {
+            is UseCaseResult.Success -> {
+                _uiState.update {
+                    it.copy(
+                        state = ScreenStateType.Loaded,
+                        pdfs = result.data
+                    )
                 }
-                is UseCaseResult.Failure -> {
-                    _uiState.update {
-                        it.copy(
-                            state = ScreenStateType.Error(result.e),
-                        )
-                    }
+            }
+            is UseCaseResult.Failure -> {
+                _uiState.update {
+                    it.copy(
+                        state = ScreenStateType.Error(result.e),
+                    )
                 }
             }
         }
     }
-
 }

@@ -90,6 +90,9 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
 
+    // PDF
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
+
     // Test
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
