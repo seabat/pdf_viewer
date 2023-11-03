@@ -57,7 +57,10 @@ fun RecentnessScreen(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = Modifier.padding(paddingValues),
-            onClick = {}
+            onClick = { pdf ->
+                val jsonString = PdfEntity.convertObjectToJson(pdf)
+                navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+            }
         )
     }
 }
