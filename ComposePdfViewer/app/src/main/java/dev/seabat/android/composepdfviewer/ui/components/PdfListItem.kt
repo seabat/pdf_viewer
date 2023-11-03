@@ -31,6 +31,7 @@ import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 fun PdfListItem(
     pdf: PdfEntity,
     onClick: (PdfEntity) -> Unit,
+    onMoreHorizClick: () -> Unit
 ) {
     Surface(
         Modifier
@@ -70,7 +71,7 @@ fun PdfListItem(
                 painter = painterResource(id = R.drawable.baseline_more_horiz_24),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-
+                    onMoreHorizClick()
                 }
             )
         }
@@ -101,6 +102,8 @@ fun PreviewPdfListItem() {
             178,
             getNowTimeStamp(),
             getNowTimeStamp()
-        )
-    ){}
+        ),
+        {},
+        {}
+    )
 }

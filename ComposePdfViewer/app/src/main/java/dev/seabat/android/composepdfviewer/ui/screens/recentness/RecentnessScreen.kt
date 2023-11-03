@@ -60,6 +60,9 @@ fun RecentnessScreen(
             onClick = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
                 navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+            },
+            onMoreHorizClick = {
+
             }
         )
     }
@@ -71,6 +74,7 @@ fun RecentnessScreenContent(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (PdfEntity) -> Unit,
+    onMoreHorizClick: () -> Unit
 ) {
     when (uiState.state) {
        is ScreenStateType.Loading -> {
@@ -79,7 +83,7 @@ fun RecentnessScreenContent(
        is ScreenStateType.Loaded -> {
            LazyColumn(modifier) {
                uiState.pdfs.forEach { pdf ->
-                   item { PdfListItem(pdf = pdf, onClick = onClick) }
+                   item { PdfListItem(pdf = pdf, onClick = onClick, onMoreHorizClick = onMoreHorizClick) }
                    item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                }
            }
@@ -111,6 +115,7 @@ fun `Loaded状態のHomeScreenContent`() {
         ),
         onRefresh = {},
         onClick =  {},
+        onMoreHorizClick = {}
     )
 }
 
@@ -124,6 +129,7 @@ fun `Loading状態のHomeScreenContent`() {
         ),
         onRefresh = {},
         onClick =  {},
+        onMoreHorizClick = {}
     )
 }
 
@@ -137,5 +143,6 @@ fun `Error状態のHomeScreenContent`() {
         ),
         onRefresh = {},
         onClick =  {},
+        onMoreHorizClick = {}
     )
 }

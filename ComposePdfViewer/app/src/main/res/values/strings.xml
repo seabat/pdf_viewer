@@ -7,4 +7,8 @@
 
     <string name="error_text">エラーが発生しました</string>
     <string name="retry">リトライ</string>
+
+    <string name="menu_delete">削除</string>
+    <string name="menu_favorite">お気に入りに追加</string>
+    <string name="menu_rename">ファイル名を変更</string>
 </resources>
