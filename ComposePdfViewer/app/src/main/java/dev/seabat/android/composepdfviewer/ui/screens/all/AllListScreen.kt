@@ -15,8 +15,8 @@ import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
 import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
+import dev.seabat.android.composepdfviewer.ui.components.PdfListItem
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
-import dev.seabat.android.composepdfviewer.ui.screens.recentness.PdfItem
 
 @Composable
 fun AllListScreen(
@@ -70,7 +70,7 @@ fun AllListScreenContent(
         is ScreenStateType.Loaded -> {
             LazyColumn(modifier) {
                 uiState.pdfs.forEach { pdf ->
-                    item { PdfItem(pdf = pdf, onClick = onClick) }
+                    item { PdfListItem(pdf = pdf, onClick = onClick) }
                     item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                 }
             }
