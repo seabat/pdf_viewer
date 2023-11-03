@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -82,7 +83,8 @@ fun PreviewPdfListItem() {
             "ファイル名",
             "ファイルパス",
             178,
-            ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+            getNowTimeStamp(),
+            getNowTimeStamp()
         )
     ){}
 }

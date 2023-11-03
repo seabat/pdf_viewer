@@ -15,13 +15,7 @@ class RecentnessListRepository @Inject constructor(
     override suspend fun fetch(): PdfListEntity {
         return withContext(Dispatchers.IO) {
             recentnessPdfDao.getAll().map {
-                PdfEntity(
-                    title = it.title,
-                    fileName = it.fileName,
-                    pathString = it.path,
-                    size = it.size,
-                    dateString = it.date
-                )
+                convertToPdfEntity(it)
             }.let {
                 PdfListEntity(it.toMutableList())
             }
@@ -30,13 +24,7 @@ class RecentnessListRepository @Inject constructor(
 
     override suspend fun add(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
-            RecentnessPdf(
-                path = pdf.pathString,
-                title = pdf.title,
-                fileName = pdf.fileName,
-                size = pdf.size,
-                date = pdf.dateString
-            ).let {
+            convertToRecentnessPdf(pdf).let {
                 recentnessPdfDao.insertPdf(it)
             }
         }
@@ -44,13 +32,7 @@ class RecentnessListRepository @Inject constructor(
 
     override suspend fun update(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
-            RecentnessPdf(
-                path = pdf.pathString,
-                title = pdf.title,
-                fileName = pdf.fileName,
-                size = pdf.size,
-                date = pdf.dateString
-            ).let {
+            convertToRecentnessPdf(pdf).let {
                 recentnessPdfDao.updatePdf(it)
             }
         }
@@ -58,15 +40,31 @@ class RecentnessListRepository @Inject constructor(
 
     override suspend fun remove(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
-            RecentnessPdf(
-                path = pdf.pathString,
-                title = pdf.title,
-                fileName = pdf.fileName,
-                size = pdf.size,
-                date = pdf.dateString
-            ).let {
+            convertToRecentnessPdf(pdf).let {
                 recentnessPdfDao.delete(it)
             }
         }
+    }
+
+    private fun convertToRecentnessPdf(pdf: PdfEntity): RecentnessPdf {
+        return RecentnessPdf(
+            path = pdf.pathString,
+            title = pdf.title,
+            fileName = pdf.fileName,
+            size = pdf.size,
+            importedDate = pdf.importedDateString,
+            openedDate = pdf.openedDateString
+        )
+    }
+
+    private fun convertToPdfEntity(recentnessPdf: RecentnessPdf): PdfEntity {
+        return PdfEntity(
+            title = recentnessPdf.title,
+            fileName = recentnessPdf.fileName,
+            pathString = recentnessPdf.path,
+            size = recentnessPdf.size,
+            importedDateString = recentnessPdf.importedDate,
+            openedDateString = recentnessPdf.openedDate
+        )
     }
 }

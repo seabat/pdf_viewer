@@ -8,11 +8,11 @@ import com.squareup.moshi.Moshi
 @JsonClass(generateAdapter = true)
 data class PdfEntity(
     @Json(name = "title") val title: String,
-    @Json(name = "fileName") val fileName: String,
-    @Json(name = "pathString") val pathString: String,
+    @Json(name = "file_name") val fileName: String,
+    @Json(name = "path_string") val pathString: String,
     @Json(name = "size") val size: Long,
-    @Json(name = "dateString") val dateString: String
-
+    @Json(name = "imported_date_string") val importedDateString: String,
+    @Json(name = "opened_date_string") val openedDateString: String
 ) {
     companion object {
         fun convertObjectToJson(pdfEntity: PdfEntity): String {
