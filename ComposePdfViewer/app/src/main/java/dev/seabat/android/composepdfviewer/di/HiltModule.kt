@@ -1,14 +1,17 @@
 package dev.seabat.android.composepdfviewer.di
 
 import android.content.Context
+import androidx.room.Room
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
+import dev.seabat.android.composepdfviewer.data.datasource.room.PdfDatabase
 import dev.seabat.android.composepdfviewer.data.repository.LocalFileRepository
 import dev.seabat.android.composepdfviewer.data.repository.PdfMetadataRepository
 import dev.seabat.android.composepdfviewer.data.repository.RecentnessListRepository
@@ -28,6 +31,20 @@ import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCaseContr
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCaseContract
 import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RoomModule {
+    @Singleton
+    @Provides
+    fun provideDatabase(
+        @ApplicationContext context: Context
+    ) = Room.databaseBuilder(context, PdfDatabase::class.java, "recentness_database").build()
+
+    @Singleton
+    @Provides
+    fun provideRecentnessPdfDao(db: PdfDatabase) = db.recentnessPdfDao()
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
