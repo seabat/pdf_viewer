@@ -9,7 +9,7 @@ import androidx.room.Update
 
 @Dao
 interface RecentnessPdfDao {
-    @Query("SELECT * FROM RecentnessPdf")
+    @Query("SELECT * FROM RecentnessPdf ORDER BY opened_date DESC")
     fun getAll(): List<RecentnessPdf>
 
     @Query("SELECT * FROM RecentnessPdf WHERE path = :path")

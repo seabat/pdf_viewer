@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.repository.RecentnessListRepositoryContract
+import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PdfViewerViewModel @Inject constructor(
-    private val recentnessListRepository: RecentnessListRepositoryContract
+    private val addRecentnessListUseCase: AddRecentnessListUseCaseContract
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<PdfViewerUiState>(
         PdfViewerUiState(
@@ -47,7 +48,7 @@ class PdfViewerViewModel @Inject constructor(
 
     fun addRecentnessPdf(pdf: PdfEntity) {
         viewModelScope.launch {
-            recentnessListRepository.add(pdf)
+            addRecentnessListUseCase(pdf)
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,6 +26,10 @@ fun AllListScreen(
     navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.reload()
+    }
 
     Scaffold(
         topBar = {
@@ -48,10 +53,8 @@ fun AllListScreen(
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
             onClick = { pdf ->
-                viewModel.addRecentness(pdf) {
-                    val jsonString = PdfEntity.convertObjectToJson(pdf)
-                    navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
-                }
+                val jsonString = PdfEntity.convertObjectToJson(pdf)
+                navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
             }
         )
     }

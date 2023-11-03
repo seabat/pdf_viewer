@@ -23,42 +23,41 @@ class RecentnessViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RecentnessUiState())
     val uiState: StateFlow<RecentnessUiState> = _uiState.asStateFlow()
 
-    private var fetchJob: Job? = null
+    private var reloadJob: Job? = null
 
     override fun onCleared() {
-        fetchJob?.cancel()
+        reloadJob?.cancel()
         super.onCleared()
     }
 
     fun reload() {
-        _uiState.update {
-            it.copy(
-                state = ScreenStateType.Loading,
-                pdfs = PdfListEntity(mutableListOf())
-            )
+        reloadJob?.cancel()
+        reloadJob = viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    state = ScreenStateType.Loading,
+                    pdfs = PdfListEntity(mutableListOf())
+                )
+            }
+            fetch()
         }
-        fetchJob?.cancel()
-        fetch()
     }
 
-    private fun fetch() {
-        fetchJob = viewModelScope.launch {
-            delay(1000)
-            when (val result =fetchRecentnessListUseCase()) {
-                is UseCaseResult.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            state = ScreenStateType.Loaded,
-                            pdfs = result.data
-                        )
-                    }
+    private suspend fun fetch() {
+        when (val result =fetchRecentnessListUseCase()) {
+            is UseCaseResult.Success -> {
+                _uiState.update {
+                    it.copy(
+                        state = ScreenStateType.Loaded,
+                        pdfs = result.data
+                    )
                 }
-                is UseCaseResult.Failure -> {
-                    _uiState.update {
-                        it.copy(
-                            state = ScreenStateType.Error(result.e),
-                        )
-                    }
+            }
+            is UseCaseResult.Failure -> {
+                _uiState.update {
+                    it.copy(
+                        state = ScreenStateType.Error(result.e),
+                    )
                 }
             }
         }

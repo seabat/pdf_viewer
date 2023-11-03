@@ -20,9 +20,8 @@ import dev.seabat.android.composepdfviewer.ui.components.PdfListItem
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
+import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 import java.lang.Exception
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun RecentnessScreen(
@@ -58,7 +57,10 @@ fun RecentnessScreen(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = Modifier.padding(paddingValues),
-            onClick = {}
+            onClick = { pdf ->
+                val jsonString = PdfEntity.convertObjectToJson(pdf)
+                navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+            }
         )
     }
 }
@@ -99,11 +101,11 @@ fun `Loaded状態のHomeScreenContent`() {
             state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
                 mutableListOf(
-                    PdfEntity("title1", "desc1", "desc1",178, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title2", "desc2", "desc1",298, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title3", "desc3", "desc1",587, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title4", "desc4", "desc1",319, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)),
-                    PdfEntity("title5", "desc5", "desc1",287, ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+                    PdfEntity("title1", "desc1", "desc1",178, getNowTimeStamp(), getNowTimeStamp()),
+                    PdfEntity("title2", "desc2", "desc1",298, getNowTimeStamp(), getNowTimeStamp()),
+                    PdfEntity("title3", "desc3", "desc1",587, getNowTimeStamp(), getNowTimeStamp()),
+                    PdfEntity("title4", "desc4", "desc1",319, getNowTimeStamp(), getNowTimeStamp()),
+                    PdfEntity("title5", "desc5", "desc1",287, getNowTimeStamp(), getNowTimeStamp())
                 )
             )
         ),

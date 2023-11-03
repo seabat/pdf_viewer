@@ -9,11 +9,11 @@ import dev.seabat.android.composepdfviewer.domain.exception.PdfViewerException
 import dev.seabat.android.composepdfviewer.domain.repository.LocalFileRepositoryContract
 import dev.seabat.android.composepdfviewer.utils.getFileInfoFromUri
 import dev.seabat.android.composepdfviewer.utils.getFileTimeStamp
+import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
@@ -41,7 +41,9 @@ class LocalFileRepository @Inject constructor(
                     it.name,
                     it.absolutePath,
                     it.length(),
-                    fileDateTimeString)
+                    fileDateTimeString,
+                    fileDateTimeString
+                )
             }
             PdfListEntity(pdfEntities.toMutableList())
         }
@@ -62,7 +64,8 @@ class LocalFileRepository @Inject constructor(
                 fileName,
                 "${context.filesDir.absolutePath}/${fileName}",
                 fileInfo.second,
-                ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+                getNowTimeStamp(),
+                getNowTimeStamp()
             )
         } ?: throw PdfViewerException("Uri からファイル名を取得できませんでした")
     }
@@ -105,6 +108,7 @@ class LocalFileRepository @Inject constructor(
             outputFile.name,
             "${context.filesDir.absolutePath}/${outputFile.name}",
             outputFile.length(),
+            fileDateTimeString,
             fileDateTimeString
         )
     }
