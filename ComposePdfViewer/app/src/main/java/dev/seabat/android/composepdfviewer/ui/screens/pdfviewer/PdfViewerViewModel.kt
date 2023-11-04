@@ -1,18 +1,14 @@
 package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.domain.repository.RecentnessListRepositoryContract
-import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PdfViewerViewModel @Inject constructor(
-    private val addRecentnessListUseCase: AddRecentnessListUseCaseContract
+    private val addRecentListUseCase: AddRecentListUseCaseContract
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<PdfViewerUiState>(
         PdfViewerUiState(
@@ -46,9 +42,9 @@ class PdfViewerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun addRecentnessPdf(pdf: PdfEntity) {
+    fun addRecentPdf(pdf: PdfEntity) {
         viewModelScope.launch {
-            addRecentnessListUseCase(pdf)
+            addRecentListUseCase(pdf)
         }
     }
 

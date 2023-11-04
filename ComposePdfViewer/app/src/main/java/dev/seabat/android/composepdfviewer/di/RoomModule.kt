@@ -25,5 +25,5 @@ object RoomModule {
 
     @Singleton
     @Provides
-    fun provideRecentnessPdfDao(db: PdfDatabase) = db.recentnessPdfDao()
+    fun provideRecentPdfDao(db: PdfDatabase) = db.recentPdfDao()
 }

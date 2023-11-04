@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screens.recentness
+package dev.seabat.android.composepdfviewer.ui.screens.recent
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,9 +24,9 @@ import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 import java.lang.Exception
 
 @Composable
-fun RecentnessScreen(
+fun RecentScreen(
     modifier: Modifier = Modifier,
-    viewModel: RecentnessViewModel,
+    viewModel: RecentViewModel,
     navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -52,7 +52,7 @@ fun RecentnessScreen(
             )
         }
     ) { paddingValues ->
-        RecentnessScreenContent(
+        RecentScreenContent(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = Modifier.padding(paddingValues),
@@ -68,8 +68,8 @@ fun RecentnessScreen(
 }
 
 @Composable
-fun RecentnessScreenContent(
-    uiState: RecentnessUiState,
+fun RecentScreenContent(
+    uiState: RecentUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (PdfEntity) -> Unit,
@@ -99,8 +99,8 @@ fun RecentnessScreenContent(
 @Preview
 @Composable
 fun `Loaded状態のHomeScreenContent`() {
-    RecentnessScreenContent(
-        uiState = RecentnessUiState(
+    RecentScreenContent(
+        uiState = RecentUiState(
             state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
                 mutableListOf(
@@ -121,8 +121,8 @@ fun `Loaded状態のHomeScreenContent`() {
 @Preview
 @Composable
 fun `Loading状態のHomeScreenContent`() {
-    RecentnessScreenContent(
-        uiState = RecentnessUiState(
+    RecentScreenContent(
+        uiState = RecentUiState(
             state = ScreenStateType.Loading,
             pdfs = PdfListEntity(mutableListOf())
         ),
@@ -135,8 +135,8 @@ fun `Loading状態のHomeScreenContent`() {
 @Preview
 @Composable
 fun `Error状態のHomeScreenContent`() {
-    RecentnessScreenContent(
-        uiState = RecentnessUiState(
+    RecentScreenContent(
+        uiState = RecentUiState(
             state = ScreenStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(mutableListOf())
         ),

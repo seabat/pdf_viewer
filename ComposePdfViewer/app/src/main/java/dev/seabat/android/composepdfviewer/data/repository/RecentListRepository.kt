@@ -1,20 +1,20 @@
 package dev.seabat.android.composepdfviewer.data.repository
 
-import dev.seabat.android.composepdfviewer.data.datasource.room.RecentnessPdf
-import dev.seabat.android.composepdfviewer.data.datasource.room.RecentnessPdfDao
-import dev.seabat.android.composepdfviewer.domain.repository.RecentnessListRepositoryContract
+import dev.seabat.android.composepdfviewer.data.datasource.room.RecentPdf
+import dev.seabat.android.composepdfviewer.data.datasource.room.RecentPdfDao
+import dev.seabat.android.composepdfviewer.domain.repository.RecentListRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class RecentnessListRepository @Inject constructor(
-    private val recentnessPdfDao: RecentnessPdfDao
-): RecentnessListRepositoryContract {
+class RecentListRepository @Inject constructor(
+    private val recentPdfDao: RecentPdfDao
+): RecentListRepositoryContract {
     override suspend fun fetch(): PdfListEntity {
         return withContext(Dispatchers.IO) {
-            recentnessPdfDao.getAll().map {
+            recentPdfDao.getAll().map {
                 convertToPdfEntity(it)
             }.let {
                 PdfListEntity(it.toMutableList())
@@ -24,30 +24,30 @@ class RecentnessListRepository @Inject constructor(
 
     override suspend fun add(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
-            convertToRecentnessPdf(pdf).let {
-                recentnessPdfDao.insertPdf(it)
+            convertToRecentPdf(pdf).let {
+                recentPdfDao.insertPdf(it)
             }
         }
     }
 
     override suspend fun update(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
-            convertToRecentnessPdf(pdf).let {
-                recentnessPdfDao.updatePdf(it)
+            convertToRecentPdf(pdf).let {
+                recentPdfDao.updatePdf(it)
             }
         }
     }
 
     override suspend fun remove(pdf: PdfEntity) {
         return withContext(Dispatchers.IO) {
-            convertToRecentnessPdf(pdf).let {
-                recentnessPdfDao.delete(it)
+            convertToRecentPdf(pdf).let {
+                recentPdfDao.delete(it)
             }
         }
     }
 
-    private fun convertToRecentnessPdf(pdf: PdfEntity): RecentnessPdf {
-        return RecentnessPdf(
+    private fun convertToRecentPdf(pdf: PdfEntity): RecentPdf {
+        return RecentPdf(
             path = pdf.pathString,
             title = pdf.title,
             fileName = pdf.fileName,
@@ -57,14 +57,14 @@ class RecentnessListRepository @Inject constructor(
         )
     }
 
-    private fun convertToPdfEntity(recentnessPdf: RecentnessPdf): PdfEntity {
+    private fun convertToPdfEntity(recentPdf: RecentPdf): PdfEntity {
         return PdfEntity(
-            title = recentnessPdf.title,
-            fileName = recentnessPdf.fileName,
-            pathString = recentnessPdf.path,
-            size = recentnessPdf.size,
-            importedDateString = recentnessPdf.importedDate,
-            openedDateString = recentnessPdf.openedDate
+            title = recentPdf.title,
+            fileName = recentPdf.fileName,
+            pathString = recentPdf.path,
+            size = recentPdf.size,
+            importedDateString = recentPdf.importedDate,
+            openedDateString = recentPdf.openedDate
         )
     }
 }

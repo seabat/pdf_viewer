@@ -3,7 +3,7 @@ package dev.seabat.android.composepdfviewer.domain.repository
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 
-interface RecentnessListRepositoryContract {
+interface RecentListRepositoryContract {
 
     suspend fun fetch(): PdfListEntity
 

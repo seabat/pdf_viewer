@@ -18,7 +18,7 @@ fun PdfViewerBottomNavigation(
     navController: NavHostController,
 ) {
     val screenItems = listOf(
-        Screen.Recentness,
+        Screen.Recent,
         Screen.Favorite,
         Screen.AllList
     )

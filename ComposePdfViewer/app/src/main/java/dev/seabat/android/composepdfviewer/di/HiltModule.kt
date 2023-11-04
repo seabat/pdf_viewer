@@ -12,23 +12,23 @@ import dagger.hilt.components.SingletonComponent
 import dev.seabat.android.composepdfviewer.data.repository.FavoriteListRepository
 import dev.seabat.android.composepdfviewer.data.repository.LocalFileRepository
 import dev.seabat.android.composepdfviewer.data.repository.PdfMetadataRepository
-import dev.seabat.android.composepdfviewer.data.repository.RecentnessListRepository
+import dev.seabat.android.composepdfviewer.data.repository.RecentListRepository
 import dev.seabat.android.composepdfviewer.domain.repository.FavoriteListRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.repository.LocalFileRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.repository.PdfMetadataRepositoryContract
-import dev.seabat.android.composepdfviewer.domain.repository.RecentnessListRepositoryContract
+import dev.seabat.android.composepdfviewer.domain.repository.RecentListRepositoryContract
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
-import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCase
-import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentnessListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFavoriteListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFavoriteListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFileListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFileListUseCaseContract
-import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCase
-import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentListUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCase
@@ -53,7 +53,7 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindRecentnessListRepository(repository: RecentnessListRepository): RecentnessListRepositoryContract
+    abstract fun bindRecentListRepository(repository: RecentListRepository): RecentListRepositoryContract
 }
 
 @Module
@@ -66,7 +66,7 @@ abstract class UseCaseModule {
 
     @Singleton
     @Binds
-    abstract fun bindAddRecentnessListUseCase(useCase: AddRecentnessListUseCase): AddRecentnessListUseCaseContract
+    abstract fun bindAddRecentListUseCase(useCase: AddRecentListUseCase): AddRecentListUseCaseContract
 
     @Singleton
     @Binds
@@ -82,7 +82,7 @@ abstract class UseCaseModule {
 
     @Singleton
     @Binds
-    abstract fun bindFetchRecentnessListUseCase(useCase: FetchRecentnessListUseCase): FetchRecentnessListUseCaseContract
+    abstract fun bindFetchRecentListUseCase(useCase: FetchRecentListUseCase): FetchRecentListUseCaseContract
 
     @Singleton
     @Binds

@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class RecentnessPdf(
+data class RecentPdf(
     @PrimaryKey val path: String,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "file_name") val fileName: String,

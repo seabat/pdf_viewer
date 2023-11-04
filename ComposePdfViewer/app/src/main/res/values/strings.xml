@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ComposePdfViewer</string>
     <string name="favorite">お気に入り</string>
-    <string name="recentness">最近見た</string>
+    <string name="recent">最近見た</string>
     <string name="all">全て</string>
     <string name="pdf_viewer">ビューア</string>
 
