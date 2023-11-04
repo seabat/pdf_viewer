@@ -38,13 +38,13 @@ class AllListViewModel @Inject constructor(
     fun reload() {
         reloadJob?.cancel()
         reloadJob = viewModelScope.launch {
-            delay(1000)
             _uiState.update {
                 it.copy(
                     state = ScreenStateType.Loading,
                     pdfs = PdfListEntity(mutableListOf())
                 )
             }
+            delay(500)
             fetch()
         }
     }

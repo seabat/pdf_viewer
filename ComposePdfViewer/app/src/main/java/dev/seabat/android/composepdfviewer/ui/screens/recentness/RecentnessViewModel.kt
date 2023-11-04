@@ -39,6 +39,7 @@ class RecentnessViewModel @Inject constructor(
                     pdfs = PdfListEntity(mutableListOf())
                 )
             }
+            delay(500)
             fetch()
         }
     }

@@ -8,6 +8,7 @@ import dev.seabat.android.composepdfviewer.domain.usecase.FetchFavoriteListUseCa
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,6 +39,7 @@ class FavoriteViewModel @Inject constructor(
                     pdfs = PdfListEntity(mutableListOf())
                 )
             }
+            delay(500)
             fetch()
         }
     }
