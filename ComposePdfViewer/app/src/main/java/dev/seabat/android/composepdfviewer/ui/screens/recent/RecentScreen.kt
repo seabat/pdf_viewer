@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screens.recentness
+package dev.seabat.android.composepdfviewer.ui.screens.recent
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,13 +24,12 @@ import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 import java.lang.Exception
 
 @Composable
-fun RecentnessScreen(
+fun RecentScreen(
     modifier: Modifier = Modifier,
-    viewModel: RecentnessViewModel,
+    viewModel: RecentViewModel,
     navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
 
     LaunchedEffect(Unit) {
         viewModel.reload()
@@ -53,24 +52,28 @@ fun RecentnessScreen(
             )
         }
     ) { paddingValues ->
-        RecentnessScreenContent(
+        RecentScreenContent(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = Modifier.padding(paddingValues),
             onClick = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
                 navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+            },
+            onMoreHorizClick = {
+
             }
         )
     }
 }
 
 @Composable
-fun RecentnessScreenContent(
-    uiState: RecentnessUiState,
+fun RecentScreenContent(
+    uiState: RecentUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (PdfEntity) -> Unit,
+    onMoreHorizClick: (PdfEntity) -> Unit
 ) {
     when (uiState.state) {
        is ScreenStateType.Loading -> {
@@ -79,7 +82,7 @@ fun RecentnessScreenContent(
        is ScreenStateType.Loaded -> {
            LazyColumn(modifier) {
                uiState.pdfs.forEach { pdf ->
-                   item { PdfListItem(pdf = pdf, onClick = onClick) }
+                   item { PdfListItem(pdf = pdf, onClick = onClick, onMoreHorizClick = onMoreHorizClick) }
                    item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                }
            }
@@ -96,8 +99,8 @@ fun RecentnessScreenContent(
 @Preview
 @Composable
 fun `Loaded状態のHomeScreenContent`() {
-    RecentnessScreenContent(
-        uiState = RecentnessUiState(
+    RecentScreenContent(
+        uiState = RecentUiState(
             state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
                 mutableListOf(
@@ -111,31 +114,34 @@ fun `Loaded状態のHomeScreenContent`() {
         ),
         onRefresh = {},
         onClick =  {},
+        onMoreHorizClick = {}
     )
 }
 
 @Preview
 @Composable
 fun `Loading状態のHomeScreenContent`() {
-    RecentnessScreenContent(
-        uiState = RecentnessUiState(
+    RecentScreenContent(
+        uiState = RecentUiState(
             state = ScreenStateType.Loading,
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
         onClick =  {},
+        onMoreHorizClick = {}
     )
 }
 
 @Preview
 @Composable
 fun `Error状態のHomeScreenContent`() {
-    RecentnessScreenContent(
-        uiState = RecentnessUiState(
+    RecentScreenContent(
+        uiState = RecentUiState(
             state = ScreenStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
         onClick =  {},
+        onMoreHorizClick = {}
     )
 }

@@ -3,7 +3,9 @@ package dev.seabat.android.composepdfviewer.ui.screens.all
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFileListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
@@ -18,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllListViewModel @Inject constructor(
+    private val addFavoriteUseCase: AddFavoriteUseCaseContract,
     private val fetchFileListUseCase: FetchFileListUseCaseContract,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AllListUiState())
@@ -35,14 +38,20 @@ class AllListViewModel @Inject constructor(
     fun reload() {
         reloadJob?.cancel()
         reloadJob = viewModelScope.launch {
-            delay(1000)
             _uiState.update {
                 it.copy(
                     state = ScreenStateType.Loading,
                     pdfs = PdfListEntity(mutableListOf())
                 )
             }
+            delay(500)
             fetch()
+        }
+    }
+
+    fun addFavorite(pdf: PdfEntity) {
+        addJob = viewModelScope.launch {
+            addFavoriteUseCase(pdf)
         }
     }
 

@@ -17,14 +17,12 @@ import dev.seabat.android.composepdfviewer.ui.screens.favorite.FavoriteScreen
 import dev.seabat.android.composepdfviewer.ui.screens.favorite.FavoriteViewModel
 import dev.seabat.android.composepdfviewer.ui.screens.pdfviewer.PdfViewerScreen
 import dev.seabat.android.composepdfviewer.ui.screens.pdfviewer.PdfViewerViewModel
-import dev.seabat.android.composepdfviewer.ui.screens.recentness.RecentnessScreen
-import dev.seabat.android.composepdfviewer.ui.screens.recentness.RecentnessViewModel
+import dev.seabat.android.composepdfviewer.ui.screens.recent.RecentScreen
+import dev.seabat.android.composepdfviewer.ui.screens.recent.RecentViewModel
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.AllList
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.Favorite
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.PdfViewer
-import dev.seabat.android.composepdfviewer.ui.screens.Screen.Recentness
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import dev.seabat.android.composepdfviewer.ui.screens.Screen.Recent
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -44,11 +42,11 @@ fun PdfViewerNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Recentness.route,
+        startDestination = Recent.route,
     ) {
-        composable(Recentness.route) {
-            val viewModel = hiltViewModel<RecentnessViewModel>()
-            RecentnessScreen(
+        composable(Recent.route) {
+            val viewModel = hiltViewModel<RecentViewModel>()
+            RecentScreen(
                 viewModel = viewModel,
                 navController = navController
             )

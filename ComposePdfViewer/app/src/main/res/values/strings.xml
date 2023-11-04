@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">ComposePdfViewer</string>
     <string name="favorite">お気に入り</string>
-    <string name="recentness">最近見た</string>
+    <string name="recent">最近見た</string>
     <string name="all">全て</string>
     <string name="pdf_viewer">ビューア</string>
 
     <string name="error_text">エラーが発生しました</string>
     <string name="retry">リトライ</string>
+
+    <string name="menu_delete">削除</string>
+    <string name="menu_favorite">お気に入りに追加</string>
+    <string name="menu_rename">ファイル名を変更</string>
 </resources>

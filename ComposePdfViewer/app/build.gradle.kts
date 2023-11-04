@@ -69,6 +69,7 @@ dependencies {
     androidTestImplementation(composeBom)
     // Material 3
     implementation("androidx.compose.material3:material3")
+    implementation ("androidx.compose.material3:material3:1.2.0-alpha10")
     // Material 2
     implementation("androidx.compose.material:material")
 

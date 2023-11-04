@@ -1,10 +1,10 @@
-package dev.seabat.android.composepdfviewer.ui.screens.recentness
+package dev.seabat.android.composepdfviewer.ui.screens.recent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
-import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentnessListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import kotlinx.coroutines.Job
@@ -17,11 +17,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecentnessViewModel @Inject constructor(
-    private val fetchRecentnessListUseCase: FetchRecentnessListUseCaseContract
+class RecentViewModel @Inject constructor(
+    private val fetchRecentListUseCase: FetchRecentListUseCaseContract
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(RecentnessUiState())
-    val uiState: StateFlow<RecentnessUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(RecentUiState())
+    val uiState: StateFlow<RecentUiState> = _uiState.asStateFlow()
 
     private var reloadJob: Job? = null
 
@@ -39,12 +39,13 @@ class RecentnessViewModel @Inject constructor(
                     pdfs = PdfListEntity(mutableListOf())
                 )
             }
+            delay(500)
             fetch()
         }
     }
 
     private suspend fun fetch() {
-        when (val result =fetchRecentnessListUseCase()) {
+        when (val result =fetchRecentListUseCase()) {
             is UseCaseResult.Success -> {
                 _uiState.update {
                     it.copy(

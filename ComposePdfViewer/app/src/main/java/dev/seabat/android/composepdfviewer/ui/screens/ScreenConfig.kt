@@ -16,10 +16,10 @@ sealed class Screen(
     val shouldShowTopClose: Boolean,
     val shouldShowAddAction: Boolean,
 ) {
-    object Recentness : Screen(
-        "recentness",
-        R.string.recentness,
-        R.string.recentness,
+    object Recent : Screen(
+        "recent",
+        R.string.recent,
+        R.string.recent,
         Icons.Filled.DateRange,
         false,
         true
@@ -53,7 +53,7 @@ sealed class Screen(
 @StringRes
 fun getAppBarTitle(route: String): Int {
     return when(route) {
-        Screen.Recentness.route -> Screen.Recentness.appBarTitleResId
+        Screen.Recent.route -> Screen.Recent.appBarTitleResId
         Screen.Favorite.route -> Screen.Favorite.appBarTitleResId
         Screen.AllList.route -> Screen.AllList.appBarTitleResId
         Screen.PdfViewer.route -> Screen.PdfViewer.appBarTitleResId
@@ -69,7 +69,7 @@ fun getAppBarTitle(route: String): Int {
 fun getScreen(route: String): Screen {
     val screenName = route.split("/")[0]
     return when(screenName) {
-        Screen.Recentness.route -> Screen.Recentness
+        Screen.Recent.route -> Screen.Recent
         Screen.Favorite.route -> Screen.Favorite
         Screen.AllList.route -> Screen.AllList
         Screen.PdfViewer.route -> Screen.PdfViewer
