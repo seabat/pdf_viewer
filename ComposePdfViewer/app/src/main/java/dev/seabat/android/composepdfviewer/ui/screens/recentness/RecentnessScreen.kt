@@ -31,7 +31,6 @@ fun RecentnessScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-
     LaunchedEffect(Unit) {
         viewModel.reload()
     }
@@ -74,7 +73,7 @@ fun RecentnessScreenContent(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (PdfEntity) -> Unit,
-    onMoreHorizClick: () -> Unit
+    onMoreHorizClick: (PdfEntity) -> Unit
 ) {
     when (uiState.state) {
        is ScreenStateType.Loading -> {

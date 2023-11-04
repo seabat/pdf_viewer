@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.seabat.android.composepdfviewer.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +51,7 @@ fun BottomSheetMenu(
                 drawableRes = R.drawable.baseline_favorite_24,
                 stringRes = R.string.menu_favorite,
             ) {
+                coroutineScope.launch { modalBottomSheetState.hide() }
                 onFavoriteClick()
             }
             MenuItem(
