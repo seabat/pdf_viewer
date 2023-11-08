@@ -56,7 +56,17 @@ fun AllListScreen(
                     viewModel.addFavorite(it)
                 }
             },
-            onDeleteClick = {}
+            onDeleteClick = {
+                coroutineScope.launch {
+                    // NOTE： BottomSheet が閉じるのを待ってから showSheet を false にする
+                    delay(100)
+                    showSheet = false
+                }
+                selectingPdf?.let {
+                    viewModel.deletePdfFile(it)
+                    viewModel.reload()
+                }
+            }
         )
     }
 
