@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
-import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFileListUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.UseCaseResult
