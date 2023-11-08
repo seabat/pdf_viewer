@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,8 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import dev.seabat.android.composepdfviewer.R
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.components.bottomsheet.BottomSheetMenu
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
@@ -36,6 +40,8 @@ fun AllListScreen(
     var showSheet by remember { mutableStateOf(false) }
     var selectingPdf by remember { mutableStateOf<PdfEntity?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    val hostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.reload()
@@ -54,13 +60,30 @@ fun AllListScreen(
                 }
                 selectingPdf?.let {
                     viewModel.addFavorite(it)
+                    coroutineScope.launch {
+                        hostState.showSnackbar("${it.title}${context.resources.getString(R.string.all_add_favorite)}")
+                    }
                 }
             },
-            onDeleteClick = {}
+            onDeleteClick = {
+                coroutineScope.launch {
+                    // NOTE： BottomSheet が閉じるのを待ってから showSheet を false にする
+                    delay(100)
+                    showSheet = false
+                }
+                selectingPdf?.let {
+                    viewModel.deletePdfFile(it)
+                    coroutineScope.launch {
+                        hostState.showSnackbar("${it.title}${context.resources.getString(R.string.all_delete)}")
+                    }
+                    viewModel.reload()
+                }
+            }
         )
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState) },
         topBar = {
             PdfViewerAppBar(
                 navController = navController,
