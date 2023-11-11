@@ -22,8 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AllListViewModel @Inject constructor(
     private val addFavoriteUseCase: AddFavoriteUseCaseContract,
-    private val fetchFileListUseCase: FetchFileListUseCaseContract,
-    private val deleteFileUseCase: DeleteFileUseCaseContract
+    private val deleteFileUseCase: DeleteFileUseCaseContract,
+    private val fetchFileListUseCase: FetchFileListUseCaseContract
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AllListUiState())
     val uiState: StateFlow<AllListUiState> = _uiState.asStateFlow()
