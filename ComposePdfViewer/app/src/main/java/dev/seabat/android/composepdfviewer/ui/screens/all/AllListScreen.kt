@@ -46,7 +46,7 @@ fun AllListScreen(
     }
 
     if (showSheet) {
-        AllListBottomSheetMenu(
+        ScreenSheetMenu(
             pdf = selectingPdf,
             viewModel = viewModel,
             closeSheet = {
@@ -76,7 +76,7 @@ fun AllListScreen(
             )
         }
     ) { paddingValues ->
-        AllListScreenContent(
+        ScreenContent(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
@@ -93,7 +93,7 @@ fun AllListScreen(
 }
 
 @Composable
-fun AllListBottomSheetMenu(
+private fun ScreenSheetMenu(
     pdf: PdfEntity?,
     viewModel: AllListViewModel,
     closeSheet: () -> Unit,
@@ -136,7 +136,7 @@ fun AllListBottomSheetMenu(
 }
 
 @Composable
-fun AllListScreenContent(
+private fun ScreenContent(
     uiState: AllListUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,

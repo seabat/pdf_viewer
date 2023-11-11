@@ -49,7 +49,7 @@ fun RecentScreen(
     }
 
     if (showSheet) {
-        RecentListBottomSheetMenu(
+        ScreenBottomSheetMenu(
             pdf = selectingPdf,
             viewModel = viewModel,
             closeSheet = {
@@ -78,7 +78,7 @@ fun RecentScreen(
             )
         }
     ) { paddingValues ->
-        RecentScreenContent(
+        ScreenContent(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
@@ -95,7 +95,7 @@ fun RecentScreen(
 }
 
 @Composable
-fun RecentListBottomSheetMenu(
+private fun ScreenBottomSheetMenu(
     pdf: PdfEntity?,
     viewModel: RecentViewModel,
     closeSheet: () -> Unit,
@@ -138,7 +138,7 @@ fun RecentListBottomSheetMenu(
 }
 
 @Composable
-fun RecentScreenContent(
+private fun ScreenContent(
     uiState: RecentUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
@@ -169,7 +169,7 @@ fun RecentScreenContent(
 @Preview
 @Composable
 fun `Loaded状態のHomeScreenContent`() {
-    RecentScreenContent(
+    ScreenContent(
         uiState = RecentUiState(
             state = ScreenStateType.Loaded,
             pdfs = PdfListEntity(
@@ -191,7 +191,7 @@ fun `Loaded状態のHomeScreenContent`() {
 @Preview
 @Composable
 fun `Loading状態のHomeScreenContent`() {
-    RecentScreenContent(
+    ScreenContent(
         uiState = RecentUiState(
             state = ScreenStateType.Loading,
             pdfs = PdfListEntity(mutableListOf())
@@ -205,7 +205,7 @@ fun `Loading状態のHomeScreenContent`() {
 @Preview
 @Composable
 fun `Error状態のHomeScreenContent`() {
-    RecentScreenContent(
+    ScreenContent(
         uiState = RecentUiState(
             state = ScreenStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(mutableListOf())

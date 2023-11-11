@@ -21,6 +21,8 @@ import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFavoriteUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCase
@@ -69,6 +71,10 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindAddRecentListUseCase(useCase: AddRecentListUseCase): AddRecentListUseCaseContract
+
+    @Singleton
+    @Binds
+    abstract fun bindDeleteFavoriteUseCase(useCase: DeleteFavoriteUseCase): DeleteFavoriteUseCaseContract
 
     @Singleton
     @Binds
