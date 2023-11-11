@@ -2,8 +2,8 @@ package dev.seabat.android.composepdfviewer.ui.screens.recent
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,7 +55,7 @@ fun RecentScreen(
         RecentScreenContent(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
-            modifier = Modifier.padding(paddingValues),
+            modifier = modifier.padding(paddingValues),
             onClick = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
                 navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
@@ -83,7 +83,7 @@ fun RecentScreenContent(
            LazyColumn(modifier) {
                uiState.pdfs.forEach { pdf ->
                    item { PdfListItem(pdf = pdf, onClick = onClick, onMoreHorizClick = onMoreHorizClick) }
-                   item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
+                   item { HorizontalDivider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                }
            }
         }

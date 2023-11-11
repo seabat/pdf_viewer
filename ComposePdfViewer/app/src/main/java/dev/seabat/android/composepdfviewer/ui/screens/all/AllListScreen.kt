@@ -2,8 +2,8 @@ package dev.seabat.android.composepdfviewer.ui.screens.all
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -39,45 +39,21 @@ fun AllListScreen(
     val uiState by viewModel.uiState.collectAsState()
     var showSheet by remember { mutableStateOf(false) }
     var selectingPdf by remember { mutableStateOf<PdfEntity?>(null) }
-    val coroutineScope = rememberCoroutineScope()
     val hostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.reload()
     }
 
     if (showSheet) {
-        BottomSheetMenu(
-            onDismiss = {
+        AllListBottomSheetMenu(
+            pdf = selectingPdf,
+            viewModel = viewModel,
+            closeSheet = {
                 showSheet = false
             },
-            onFavoriteClick = {
-                coroutineScope.launch {
-                    // NOTE： BottomSheet が閉じるのを待ってから showSheet を false にする
-                    delay(100)
-                    showSheet = false
-                }
-                selectingPdf?.let {
-                    viewModel.addFavorite(it)
-                    coroutineScope.launch {
-                        hostState.showSnackbar("${it.title}${context.resources.getString(R.string.all_add_favorite)}")
-                    }
-                }
-            },
-            onDeleteClick = {
-                coroutineScope.launch {
-                    // NOTE： BottomSheet が閉じるのを待ってから showSheet を false にする
-                    delay(100)
-                    showSheet = false
-                }
-                selectingPdf?.let {
-                    viewModel.deletePdfFile(it)
-                    coroutineScope.launch {
-                        hostState.showSnackbar("${it.title}${context.resources.getString(R.string.all_delete)}")
-                    }
-                    viewModel.reload()
-                }
+            showSnackBar = {
+                hostState.showSnackbar(it)
             }
         )
     }
@@ -104,11 +80,11 @@ fun AllListScreen(
             uiState = uiState,
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
-            onClick = { pdf ->
+            goViewer = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
                 navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
             },
-            onMoreHorizClick = { pdf ->
+            showBottomSheetMenu = { pdf ->
                 showSheet = true
                 selectingPdf = pdf
             }
@@ -117,12 +93,55 @@ fun AllListScreen(
 }
 
 @Composable
+fun AllListBottomSheetMenu(
+    pdf: PdfEntity?,
+    viewModel: AllListViewModel,
+    closeSheet: () -> Unit,
+    showSnackBar: suspend (String) -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    BottomSheetMenu(
+        onDismiss = {
+            closeSheet()
+        },
+        onFavoriteClick = {
+            coroutineScope.launch {
+                // NOTE： BottomSheet が閉じるのを待ってから showSheet を false にする
+                delay(100)
+                closeSheet()
+            }
+            pdf?.let {
+                viewModel.addFavorite(it)
+                coroutineScope.launch {
+                    showSnackBar("${it.title}${context.resources.getString(R.string.all_add_favorite)}")
+                }
+            }
+        },
+        onDeleteClick = {
+            coroutineScope.launch {
+                // NOTE： BottomSheet が閉じるのを待ってから showSheet を false にする
+                delay(100)
+                closeSheet()
+            }
+            pdf?.let {
+                viewModel.deletePdfFile(it)
+                coroutineScope.launch {
+                    showSnackBar("${it.title}${context.resources.getString(R.string.all_delete)}")
+                }
+                viewModel.reload()
+            }
+        }
+    )
+}
+
+@Composable
 fun AllListScreenContent(
     uiState: AllListUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: (PdfEntity) -> Unit,
-    onMoreHorizClick: (PdfEntity) -> Unit
+    goViewer: (PdfEntity) -> Unit,
+    showBottomSheetMenu: (PdfEntity) -> Unit
 
 ) {
     when (uiState.state) {
@@ -132,8 +151,8 @@ fun AllListScreenContent(
         is ScreenStateType.Loaded -> {
             LazyColumn(modifier) {
                 uiState.pdfs.forEach { pdf ->
-                    item { PdfListItem(pdf = pdf, onClick = onClick, onMoreHorizClick = onMoreHorizClick) }
-                    item { Divider(Modifier.padding(start = 16.dp, end = 16.dp)) }
+                    item { PdfListItem(pdf = pdf, onClick = goViewer, onMoreHorizClick = showBottomSheetMenu) }
+                    item { HorizontalDivider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                 }
             }
         }
