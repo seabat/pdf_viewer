@@ -29,10 +29,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetMenu(
+fun FavoriteBottomSheetMenu(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    onFavoriteClick: () -> Unit,
+    onDeleteFavoriteClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -47,14 +47,14 @@ fun BottomSheetMenu(
             .padding(all = 16.dp)
             .fillMaxWidth()
         ) {
-            MenuItem(
-                drawableRes = R.drawable.baseline_favorite_24,
-                stringRes = R.string.menu_favorite,
+            FavoriteMenuItem(
+                drawableRes = R.drawable.baseline_remove_circle_outline_24,
+                stringRes = R.string.menu_delete_favorite,
             ) {
                 coroutineScope.launch { modalBottomSheetState.hide() }
-                onFavoriteClick()
+                onDeleteFavoriteClick()
             }
-            MenuItem(
+            FavoriteMenuItem(
                 drawableRes = R.drawable.baseline_delete_24,
                 stringRes = R.string.menu_delete
             ) {
@@ -65,7 +65,7 @@ fun BottomSheetMenu(
 }
 
 @Composable
-private fun MenuItem(
+private fun FavoriteMenuItem(
     @DrawableRes drawableRes: Int,
     @StringRes stringRes: Int,
     modifier: Modifier = Modifier,
@@ -85,7 +85,7 @@ private fun MenuItem(
 }
 @Preview
 @Composable
-private fun MenuItemPreview() {
-    MenuItem(R.drawable.baseline_delete_24, R.string.menu_delete) {}
+private fun FavoriteMenuItemPreview() {
+    FavoriteMenuItem(R.drawable.baseline_delete_24, R.string.menu_delete) {}
 }
 
