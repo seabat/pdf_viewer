@@ -13,6 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ComposePdfViewer"
+rootProject.name = "Simple PDF Viewer"
 include(":app")
- 
