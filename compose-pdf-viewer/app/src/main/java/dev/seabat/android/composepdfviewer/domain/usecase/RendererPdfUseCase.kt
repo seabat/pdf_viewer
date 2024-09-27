@@ -6,44 +6,52 @@ import dev.seabat.android.composepdfviewer.ui.screens.pdfviewer.Dimensions
 import dev.seabat.android.composepdfviewer.ui.screens.pdfviewer.ZoomType
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class RendererPdfUseCase @Inject constructor() : RendererPdfUseCaseContract {
+
+    private val mutex = Mutex()
+
     override suspend fun invoke(
         renderer: PdfRenderer,
         pageNo: Int,
         displayArea: Dimensions,
         zoomType: ZoomType
-    ): Bitmap = withContext(Dispatchers.IO) {
-        val page = renderer.openPage(pageNo)
-        val dimensions =
-            calculateBitmapDimensions(
-                Dimensions(page.width, page.height),
-                displayArea
-            )
+    ): Bitmap =
+        mutex.withLock {
+            withContext(Dispatchers.IO) {
+                val page = renderer.openPage(pageNo)
+                val dimensions =
+                    calculateBitmapDimensions(
+                        Dimensions(page.width, page.height),
+                        displayArea
+                    )
 
-        val bitmap =
-            when (zoomType) {
-                ZoomType.ZoomNone -> {
-                    Bitmap.createBitmap(
-                        dimensions.width,
-                        dimensions.height,
-                        Bitmap.Config.ARGB_8888
-                    )
-                }
-                ZoomType.ZoomDouble -> {
-                    Bitmap.createBitmap(
-                        (dimensions.width * 2.0).toInt(),
-                        (dimensions.height * 2.0).toInt(),
-                        Bitmap.Config.ARGB_8888
-                    )
-                }
+                val bitmap =
+                    when (zoomType) {
+                        ZoomType.ZoomNone -> {
+                            Bitmap.createBitmap(
+                                dimensions.width,
+                                dimensions.height,
+                                Bitmap.Config.ARGB_8888
+                            )
+                        }
+                        ZoomType.ZoomDouble -> {
+                            Bitmap.createBitmap(
+                                (dimensions.width * 2.0).toInt(),
+                                (dimensions.height * 2.0).toInt(),
+                                Bitmap.Config.ARGB_8888
+                            )
+                        }
+                    }
+
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                page.close()
+                bitmap
             }
-
-        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-        page.close()
-        bitmap
-    }
+        }
 
     private fun calculateBitmapDimensions(
         pdf: Dimensions,
