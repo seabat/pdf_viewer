@@ -13,6 +13,7 @@ import dev.seabat.android.composepdfviewer.domain.usecase.RendererPdfUseCaseCont
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import javax.inject.Inject
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -98,6 +99,9 @@ constructor(
                         state = ScreenStateType.Loading
                     )
                 }
+
+                // TODO: あとで削除する
+                delay(1000)
 
                 val bitmap = rendererPdfUseCase(pdfRenderer, pageNo, displayArea, zoomType)
 

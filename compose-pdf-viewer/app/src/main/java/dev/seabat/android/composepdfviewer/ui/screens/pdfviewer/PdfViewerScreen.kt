@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
-import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
@@ -71,29 +70,19 @@ fun PdfViewerScreen(
             )
         }
     ) { paddingValues ->
-        when (uiState.state) {
-            is ScreenStateType.Error -> {
-                // TODO: Error Screen
-            }
-            is ScreenStateType.Loading -> {
-                LoadingComponent()
-            }
-            is ScreenStateType.Loaded -> {
-                PdfViewerScreenContent(
-                    uiState = uiState,
-                    modifier = modifier.padding(paddingValues),
-                    readPage = { pageNo ->
-                        viewModel.readAhead(
-                            pageNo,
-                            getImageViewDimensions(
-                                activity
-                            )
-                        )
-                    },
-                    onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
+        PdfViewerScreenContent(
+            uiState = uiState,
+            modifier = modifier.padding(paddingValues),
+            readPage = { pageNo ->
+                viewModel.readAhead(
+                    pageNo,
+                    getImageViewDimensions(
+                        activity
+                    )
                 )
-            }
-        }
+            },
+            onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
+        )
     }
 }
 
