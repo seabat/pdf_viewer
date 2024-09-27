@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.AllList
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.Favorite
 import dev.seabat.android.composepdfviewer.ui.screens.Screen.PdfViewer
@@ -54,7 +54,7 @@ fun PdfViewerNavHost(
         ) { backStackEntry ->
             val jsonString = backStackEntry.arguments?.getString("pdf")
             jsonString?.let { json ->
-                PdfEntity.convertJsonToObject(json)?.let { pdfEntity ->
+                PdfResourceEntity.convertJsonToObject(json)?.let { pdfEntity ->
                     PdfViewerScreen(navController = navController, pdf = pdfEntity)
                 }
             }

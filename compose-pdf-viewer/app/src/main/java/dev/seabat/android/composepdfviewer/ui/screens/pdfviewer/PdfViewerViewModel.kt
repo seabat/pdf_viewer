@@ -6,7 +6,7 @@ import android.os.ParcelFileDescriptor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import kotlinx.coroutines.Job
@@ -45,7 +45,7 @@ constructor(
         super.onCleared()
     }
 
-    fun addRecentPdf(pdf: PdfEntity) {
+    fun addRecentPdf(pdf: PdfResourceEntity) {
         viewModelScope.launch {
             addRecentListUseCase(pdf)
         }

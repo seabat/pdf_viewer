@@ -33,7 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
@@ -48,7 +48,7 @@ fun PdfViewerScreen(
     modifier: Modifier = Modifier,
     viewModel: PdfViewerViewModel = hiltViewModel<PdfViewerViewModel>(),
     navController: NavHostController,
-    pdf: PdfEntity
+    pdf: PdfResourceEntity
 ) {
     val activity = LocalContext.current as ComponentActivity
     val uiState by viewModel.uiState.collectAsState()

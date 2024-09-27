@@ -1,15 +1,15 @@
 package dev.seabat.android.composepdfviewer.domain.repository
 
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 
 interface RecentListRepositoryContract {
 
     suspend fun fetch(): PdfListEntity
 
-    suspend fun add(pdf: PdfEntity)
+    suspend fun add(pdf: PdfResourceEntity)
 
-    suspend fun update(pdf: PdfEntity)
+    suspend fun update(pdf: PdfResourceEntity)
 
-    suspend fun remove(pdf: PdfEntity)
+    suspend fun remove(pdf: PdfResourceEntity)
 }

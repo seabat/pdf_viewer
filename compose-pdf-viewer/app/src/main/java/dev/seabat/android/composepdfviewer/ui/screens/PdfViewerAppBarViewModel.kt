@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCaseContract
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class PdfViewerAppBarViewModel @Inject constructor(
      * @param uri
      * @param onImported import が完了した際に呼ばれるコールバック
      */
-    fun importPdfAsync(uri: Uri, onImported: (PdfEntity) -> Unit) {
+    fun importPdfAsync(uri: Uri, onImported: (PdfResourceEntity) -> Unit) {
         viewModelScope.launch {
             val pdfEntity = importFileUseCase(uri)
             onImported(pdfEntity)

@@ -24,14 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.seabat.android.composepdfviewer.R
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 
 @Composable
 fun PdfListItem(
-    pdf: PdfEntity,
-    onClick: (PdfEntity) -> Unit,
-    onMoreHorizClick: (PdfEntity) -> Unit
+    pdf: PdfResourceEntity,
+    onClick: (PdfResourceEntity) -> Unit,
+    onMoreHorizClick: (PdfResourceEntity) -> Unit
 ) {
     Surface(
         Modifier
@@ -95,7 +95,7 @@ fun convertBytes(bytes: Long): String {
 @Composable
 fun PreviewPdfListItem() {
     PdfListItem(
-        PdfEntity(
+        PdfResourceEntity(
             "タイトル",
             "ファイル名",
             "ファイルパス",

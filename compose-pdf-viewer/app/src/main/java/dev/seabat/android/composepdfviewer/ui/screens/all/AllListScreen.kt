@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.R
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
 import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.ui.components.PdfListItem
@@ -39,7 +39,7 @@ fun AllListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showSheet by remember { mutableStateOf(false) }
-    var selectingPdf by remember { mutableStateOf<PdfEntity?>(null) }
+    var selectingPdf by remember { mutableStateOf<PdfResourceEntity?>(null) }
     val hostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -66,7 +66,7 @@ fun AllListScreen(
                 navController = navController,
                 onPdfImported = { pdf ->
                     viewModel.reload()
-                    val jsonString = PdfEntity.convertObjectToJson(pdf)
+                    val jsonString = PdfResourceEntity.convertObjectToJson(pdf)
                     navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
                 }
             )
@@ -82,7 +82,7 @@ fun AllListScreen(
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
             goViewer = { pdf ->
-                val jsonString = PdfEntity.convertObjectToJson(pdf)
+                val jsonString = PdfResourceEntity.convertObjectToJson(pdf)
                 navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
             },
             showBottomSheetMenu = { pdf ->
@@ -95,7 +95,7 @@ fun AllListScreen(
 
 @Composable
 private fun ScreenSheetMenu(
-    pdf: PdfEntity?,
+    pdf: PdfResourceEntity?,
     viewModel: AllListViewModel,
     closeSheet: () -> Unit,
     showSnackBar: suspend (String) -> Unit
@@ -143,8 +143,8 @@ private fun ScreenContent(
     uiState: AllListUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
-    goViewer: (PdfEntity) -> Unit,
-    showBottomSheetMenu: (PdfEntity) -> Unit
+    goViewer: (PdfResourceEntity) -> Unit,
+    showBottomSheetMenu: (PdfResourceEntity) -> Unit
 ) {
     when (uiState.state) {
         is ScreenStateType.Loading -> {

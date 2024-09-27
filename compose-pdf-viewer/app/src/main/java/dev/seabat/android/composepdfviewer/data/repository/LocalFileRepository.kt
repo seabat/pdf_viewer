@@ -3,8 +3,8 @@ package dev.seabat.android.composepdfviewer.data.repository
 import android.content.Context
 import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.exception.PdfViewerException
 import dev.seabat.android.composepdfviewer.domain.repository.LocalFileRepositoryContract
 import dev.seabat.android.composepdfviewer.utils.getFileInfoFromUri
@@ -37,7 +37,7 @@ class LocalFileRepository @Inject constructor(@ApplicationContext private val co
                 val fileDateTimeString = getFileTimeStamp(
                     it
                 ).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
-                PdfEntity(
+                PdfResourceEntity(
                     it.name,
                     it.name,
                     it.absolutePath,
@@ -56,14 +56,14 @@ class LocalFileRepository @Inject constructor(@ApplicationContext private val co
      * @param uri
      */
     @Throws(PdfViewerException::class)
-    override suspend fun add(uri: Uri): PdfEntity {
+    override suspend fun add(uri: Uri): PdfResourceEntity {
         val fileInfo = getFileInfoFromUri(context, uri)
             ?: throw PdfViewerException(
                 "Uri からファイル情報を取得できませんでした"
             )
         return fileInfo.first?.let { fileName ->
             copyPdfToInternalStorage(fileName, uri)
-            PdfEntity(
+            PdfResourceEntity(
                 fileName,
                 fileName,
                 "${context.filesDir.absolutePath}/$fileName",
@@ -94,7 +94,7 @@ class LocalFileRepository @Inject constructor(@ApplicationContext private val co
      * @return
      */
     @Throws(PdfViewerException::class)
-    override suspend fun importAssetsFile(): PdfEntity {
+    override suspend fun importAssetsFile(): PdfResourceEntity {
         val outputFile = File(context.filesDir, "sample.pdf")
         runCatching {
             context.assets.open("sample.pdf").use { inputStream ->
@@ -109,7 +109,7 @@ class LocalFileRepository @Inject constructor(@ApplicationContext private val co
         val fileDateTimeString = getFileTimeStamp(
             outputFile
         ).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
-        return PdfEntity(
+        return PdfResourceEntity(
             outputFile.name,
             outputFile.name,
             "${context.filesDir.absolutePath}/${outputFile.name}",

@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 
 @JsonClass(generateAdapter = true)
-data class PdfEntity(
+data class PdfResourceEntity(
     @Json(name = "title") val title: String,
     @Json(name = "file_name") val fileName: String,
     @Json(name = "path_string") val pathString: String,
@@ -14,15 +14,15 @@ data class PdfEntity(
     @Json(name = "opened_date_string") val openedDateString: String
 ) {
     companion object {
-        fun convertObjectToJson(pdfEntity: PdfEntity): String {
+        fun convertObjectToJson(pdfEntity: PdfResourceEntity): String {
             val moshi = Moshi.Builder().build()
-            val jsonAdapter = moshi.adapter(PdfEntity::class.java)
+            val jsonAdapter = moshi.adapter(PdfResourceEntity::class.java)
             return jsonAdapter.toJson(pdfEntity)
         }
 
-        fun convertJsonToObject(jsonString: String): PdfEntity? {
+        fun convertJsonToObject(jsonString: String): PdfResourceEntity? {
             val moshi = Moshi.Builder().build()
-            val jsonAdapter = moshi.adapter(PdfEntity::class.java)
+            val jsonAdapter = moshi.adapter(PdfResourceEntity::class.java)
             return jsonAdapter.fromJson(jsonString)
         }
     }

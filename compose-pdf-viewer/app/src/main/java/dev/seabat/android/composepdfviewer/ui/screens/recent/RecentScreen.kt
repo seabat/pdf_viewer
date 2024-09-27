@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.R
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
 import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.ui.components.PdfListItem
@@ -42,7 +42,7 @@ fun RecentScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showSheet by remember { mutableStateOf(false) }
-    var selectingPdf by remember { mutableStateOf<PdfEntity?>(null) }
+    var selectingPdf by remember { mutableStateOf<PdfResourceEntity?>(null) }
     val hostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -68,7 +68,7 @@ fun RecentScreen(
                 navController = navController,
                 onPdfImported = { pdf ->
                     viewModel.reload()
-                    val jsonString = PdfEntity.convertObjectToJson(pdf)
+                    val jsonString = PdfResourceEntity.convertObjectToJson(pdf)
                     navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
                 }
             )
@@ -84,7 +84,7 @@ fun RecentScreen(
             onRefresh = { viewModel.reload() },
             modifier = modifier.padding(paddingValues),
             goViewer = { pdf ->
-                val jsonString = PdfEntity.convertObjectToJson(pdf)
+                val jsonString = PdfResourceEntity.convertObjectToJson(pdf)
                 navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
             },
             showBottomSheetMenu = { pdf ->
@@ -97,7 +97,7 @@ fun RecentScreen(
 
 @Composable
 private fun ScreenBottomSheetMenu(
-    pdf: PdfEntity?,
+    pdf: PdfResourceEntity?,
     viewModel: RecentViewModel,
     closeSheet: () -> Unit,
     showSnackBar: suspend (String) -> Unit
@@ -145,8 +145,8 @@ private fun ScreenContent(
     uiState: RecentUiState,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
-    goViewer: (PdfEntity) -> Unit,
-    showBottomSheetMenu: (PdfEntity) -> Unit
+    goViewer: (PdfResourceEntity) -> Unit,
+    showBottomSheetMenu: (PdfResourceEntity) -> Unit
 ) {
     when (uiState.state) {
         is ScreenStateType.Loading -> {
@@ -184,7 +184,7 @@ fun `Loaded状態のHomeScreenContent`() {
             pdfs =
             PdfListEntity(
                 mutableListOf(
-                    PdfEntity(
+                    PdfResourceEntity(
                         "title1",
                         "desc1",
                         "desc1",
@@ -192,7 +192,7 @@ fun `Loaded状態のHomeScreenContent`() {
                         getNowTimeStamp(),
                         getNowTimeStamp()
                     ),
-                    PdfEntity(
+                    PdfResourceEntity(
                         "title2",
                         "desc2",
                         "desc1",
@@ -200,7 +200,7 @@ fun `Loaded状態のHomeScreenContent`() {
                         getNowTimeStamp(),
                         getNowTimeStamp()
                     ),
-                    PdfEntity(
+                    PdfResourceEntity(
                         "title3",
                         "desc3",
                         "desc1",
@@ -208,7 +208,7 @@ fun `Loaded状態のHomeScreenContent`() {
                         getNowTimeStamp(),
                         getNowTimeStamp()
                     ),
-                    PdfEntity(
+                    PdfResourceEntity(
                         "title4",
                         "desc4",
                         "desc1",
@@ -216,7 +216,7 @@ fun `Loaded状態のHomeScreenContent`() {
                         getNowTimeStamp(),
                         getNowTimeStamp()
                     ),
-                    PdfEntity(
+                    PdfResourceEntity(
                         "title5",
                         "desc5",
                         "desc1",

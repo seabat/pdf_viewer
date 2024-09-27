@@ -1,8 +1,8 @@
 package dev.seabat.android.composepdfviewer.domain.repository
 
 import android.net.Uri
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.exception.PdfViewerException
 
 interface LocalFileRepositoryContract {
@@ -20,7 +20,7 @@ interface LocalFileRepositoryContract {
      * @param uri
      */
     @Throws(PdfViewerException::class)
-    suspend fun add(uri: Uri): PdfEntity
+    suspend fun add(uri: Uri): PdfResourceEntity
 
     /**
      * アセットファイルをアプリのプライベート領域の files ディレクトリに追加する
@@ -28,7 +28,7 @@ interface LocalFileRepositoryContract {
      * @return
      */
     @Throws(PdfViewerException::class)
-    suspend fun importAssetsFile(): PdfEntity
+    suspend fun importAssetsFile(): PdfResourceEntity
 
     /**
      * アプリのプライベート領域の files ディレクトリに格納されたファイルを削除する

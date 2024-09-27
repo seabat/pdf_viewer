@@ -1,7 +1,7 @@
 package dev.seabat.android.composepdfviewer.domain.usecase
 
 import android.net.Uri
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 
 interface ImportFileUseCaseContract {
 
@@ -10,5 +10,5 @@ interface ImportFileUseCaseContract {
      *
      * @return
      */
-    suspend operator fun invoke(uri: Uri): PdfEntity
+    suspend operator fun invoke(uri: Uri): PdfResourceEntity
 }

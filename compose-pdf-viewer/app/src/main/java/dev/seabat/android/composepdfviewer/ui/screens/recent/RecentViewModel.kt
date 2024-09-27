@@ -3,8 +3,8 @@ package dev.seabat.android.composepdfviewer.ui.screens.recent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchRecentListUseCaseContract
@@ -54,14 +54,14 @@ constructor(
             }
     }
 
-    fun addFavorite(pdf: PdfEntity) {
+    fun addFavorite(pdf: PdfResourceEntity) {
         addJob =
             viewModelScope.launch {
                 addFavoriteUseCase(pdf)
             }
     }
 
-    fun deletePdfFile(pdf: PdfEntity) {
+    fun deletePdfFile(pdf: PdfResourceEntity) {
         viewModelScope.launch {
             deleteFileUseCase(pdf)
         }

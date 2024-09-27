@@ -1,7 +1,7 @@
 package dev.seabat.android.composepdfviewer.domain.usecase
 
 import android.net.Uri
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
+import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.repository.LocalFileRepositoryContract
 import javax.inject.Inject
 
@@ -14,7 +14,5 @@ class ImportFileUseCase @Inject constructor(
      *
      * @return
      */
-    override suspend operator fun invoke(uri: Uri): PdfEntity {
-        return localFileRepository.add(uri)
-    }
+    override suspend operator fun invoke(uri: Uri): PdfResourceEntity = localFileRepository.add(uri)
 }
