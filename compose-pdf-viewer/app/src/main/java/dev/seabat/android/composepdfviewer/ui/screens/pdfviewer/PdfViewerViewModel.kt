@@ -5,10 +5,10 @@ import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,17 +20,20 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class PdfViewerViewModel @Inject constructor(
+class PdfViewerViewModel
+@Inject
+constructor(
     private val addRecentListUseCase: AddRecentListUseCaseContract
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<PdfViewerUiState>(
-        PdfViewerUiState(
-            state = ScreenStateType.Loading,
-            currentPageNo = 0,
-            bitmap = null,
-            zoom = ZoomType.ZoomNone
+    private val _uiState =
+        MutableStateFlow<PdfViewerUiState>(
+            PdfViewerUiState(
+                state = ScreenStateType.Loading,
+                currentPageNo = 0,
+                bitmap = null,
+                zoom = ZoomType.ZoomNone
+            )
         )
-    )
     val uiState: StateFlow<PdfViewerUiState> = _uiState.asStateFlow()
 
     private var totalPageCount = 0
@@ -51,7 +54,10 @@ class PdfViewerViewModel @Inject constructor(
     fun extractPageCount(filePath: String): Int {
         val file = File(filePath)
         try {
-            val parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            val parcelFileDescriptor = ParcelFileDescriptor.open(
+                file,
+                ParcelFileDescriptor.MODE_READ_ONLY
+            )
             pdfRenderer = PdfRenderer(parcelFileDescriptor)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -62,7 +68,10 @@ class PdfViewerViewModel @Inject constructor(
         }
     }
 
-    fun readAhead(pageNo: Int, displayArea: Dimensions) {
+    fun readAhead(
+        pageNo: Int,
+        displayArea: Dimensions
+    ) {
         doRendering(pageNo, displayArea, uiState.value.zoom)
     }
 
@@ -71,50 +80,57 @@ class PdfViewerViewModel @Inject constructor(
         doRendering(uiState.value.currentPageNo, displayArea, newZoom)
     }
 
-    private fun doRendering(pageNo: Int, displayArea: Dimensions, zoomType: ZoomType) {
-        renderingJob = viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    state = ScreenStateType.Loading,
-                )
-            }
-
-            val page = pdfRenderer.openPage(pageNo)
-            val dimensions = calculateBitmapDimensions(
-                Dimensions(page.width, page.height),
-                displayArea
-            )
-
-            val bitmap = when (zoomType) {
-                ZoomType.ZoomNone -> {
-                    Bitmap.createBitmap(
-                        dimensions.width,
-                        dimensions.height,
-                        Bitmap.Config.ARGB_8888
+    private fun doRendering(
+        pageNo: Int,
+        displayArea: Dimensions,
+        zoomType: ZoomType
+    ) {
+        renderingJob =
+            viewModelScope.launch {
+                _uiState.update {
+                    it.copy(
+                        state = ScreenStateType.Loading
                     )
                 }
-                ZoomType.ZoomDouble -> {
-                    Bitmap.createBitmap(
-                        (dimensions.width * 2.0).toInt(),
-                        (dimensions.height * 2.0).toInt(),
-                        Bitmap.Config.ARGB_8888
+
+                val page = pdfRenderer.openPage(pageNo)
+                val dimensions =
+                    calculateBitmapDimensions(
+                        Dimensions(page.width, page.height),
+                        displayArea
+                    )
+
+                val bitmap =
+                    when (zoomType) {
+                        ZoomType.ZoomNone -> {
+                            Bitmap.createBitmap(
+                                dimensions.width,
+                                dimensions.height,
+                                Bitmap.Config.ARGB_8888
+                            )
+                        }
+                        ZoomType.ZoomDouble -> {
+                            Bitmap.createBitmap(
+                                (dimensions.width * 2.0).toInt(),
+                                (dimensions.height * 2.0).toInt(),
+                                Bitmap.Config.ARGB_8888
+                            )
+                        }
+                    }
+
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+
+                _uiState.update {
+                    it.copy(
+                        currentPageNo = pageNo,
+                        state = ScreenStateType.Loaded,
+                        bitmap = bitmap,
+                        zoom = zoomType
                     )
                 }
+
+                page.close()
             }
-
-            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-
-            _uiState.update {
-                it.copy(
-                    currentPageNo = pageNo,
-                    state = ScreenStateType.Loaded,
-                    bitmap = bitmap,
-                    zoom = zoomType
-                )
-            }
-
-            page.close()
-        }
     }
 
     private fun calculateBitmapDimensions(
@@ -129,11 +145,13 @@ class PdfViewerViewModel @Inject constructor(
             // height には width の拡大/縮小した比率を適用する。
             Dimensions(
                 width = displayArea.width,
-                height = ((displayArea.width.toDouble() / pdf.width.toDouble()) * pdf.height).toInt()
+                height = ((displayArea.width.toDouble() / pdf.width.toDouble()) * pdf.height)
+                    .toInt()
             )
         } else {
             Dimensions(
-                width = ((displayArea.height.toDouble() / pdf.height.toDouble()) * pdf.width).toInt(),
+                width = ((displayArea.height.toDouble() / pdf.height.toDouble()) * pdf.width)
+                    .toInt(),
                 height = displayArea.height
             )
         }

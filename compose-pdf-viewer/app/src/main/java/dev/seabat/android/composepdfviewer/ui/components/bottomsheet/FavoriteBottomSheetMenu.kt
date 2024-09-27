@@ -41,15 +41,16 @@ fun FavoriteBottomSheetMenu(
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = modalBottomSheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
-        Column(modifier = Modifier
-            .padding(all = 16.dp)
-            .fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .fillMaxWidth()
         ) {
             FavoriteMenuItem(
                 drawableRes = R.drawable.baseline_remove_circle_outline_24,
-                stringRes = R.string.menu_delete_favorite,
+                stringRes = R.string.menu_delete_favorite
             ) {
                 coroutineScope.launch { modalBottomSheetState.hide() }
                 onDeleteFavoriteClick()
@@ -69,7 +70,7 @@ private fun FavoriteMenuItem(
     @DrawableRes drawableRes: Int,
     @StringRes stringRes: Int,
     modifier: Modifier = Modifier,
-    onClick : () -> Unit
+    onClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -83,9 +84,9 @@ private fun FavoriteMenuItem(
         Text(text = stringResource(id = stringRes))
     }
 }
+
 @Preview
 @Composable
 private fun FavoriteMenuItemPreview() {
     FavoriteMenuItem(R.drawable.baseline_delete_24, R.string.menu_delete) {}
 }
-

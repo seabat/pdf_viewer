@@ -1,9 +1,9 @@
 package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
-import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import android.graphics.Bitmap
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 
-data class PdfViewerUiState (
+data class PdfViewerUiState(
     val state: ScreenStateType = ScreenStateType.Loading,
     val currentPageNo: Int = 0,
     val bitmap: Bitmap? = null,
@@ -14,8 +14,8 @@ sealed class ZoomType(val value: Int) {
     companion object {
         fun next(zoomType: ZoomType): ZoomType {
             return when (zoomType) {
-               is ZoomNone -> ZoomDouble
-               is ZoomDouble -> ZoomNone
+                is ZoomNone -> ZoomDouble
+                is ZoomDouble -> ZoomNone
             }
         }
     }

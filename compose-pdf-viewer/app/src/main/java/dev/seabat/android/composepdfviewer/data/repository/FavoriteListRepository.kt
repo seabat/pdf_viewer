@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class FavoriteListRepository @Inject constructor(
     private val favoritePdfDao: FavoritePdfDao
-): FavoriteListRepositoryContract {
+) : FavoriteListRepositoryContract {
     override suspend fun fetch(): PdfListEntity {
         return withContext(Dispatchers.IO) {
             favoritePdfDao.getAll().map {

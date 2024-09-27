@@ -69,13 +69,13 @@ fun FavoriteScreen(
                 onPdfImported = { pdf ->
                     viewModel.reload()
                     val jsonString = PdfEntity.convertObjectToJson(pdf)
-                    navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+                    navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
                 }
             )
         },
         bottomBar = {
             PdfViewerBottomNavigation(
-                navController = navController,
+                navController = navController
             )
         }
     ) { paddingValues ->
@@ -85,7 +85,7 @@ fun FavoriteScreen(
             modifier = modifier.padding(paddingValues),
             goViewer = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
-                navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+                navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
             },
             showBottomSheetMenu = { pdf ->
                 showSheet = true
@@ -117,7 +117,9 @@ private fun ScreenBottomSheetMenu(
             pdf?.let {
                 viewModel.deleteFavorite(it)
                 coroutineScope.launch {
-                    showSnackBar("${it.title}${context.resources.getString(R.string.all_add_favorite)}")
+                    showSnackBar(
+                        "${it.title}${context.resources.getString(R.string.all_add_favorite)}"
+                    )
                 }
                 viewModel.reload()
             }
@@ -154,7 +156,13 @@ private fun ScreenContent(
         is ScreenStateType.Loaded -> {
             LazyColumn(modifier) {
                 uiState.pdfs.forEach { pdf ->
-                    item { PdfListItem(pdf = pdf, onClick = goViewer, onMoreHorizClick = showBottomSheetMenu) }
+                    item {
+                        PdfListItem(
+                            pdf = pdf,
+                            onClick = goViewer,
+                            onMoreHorizClick = showBottomSheetMenu
+                        )
+                    }
                     item { HorizontalDivider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                 }
             }
@@ -167,25 +175,61 @@ private fun ScreenContent(
     }
 }
 
-
 @Preview
 @Composable
 fun `Loaded状態`() {
     ScreenContent(
-        uiState = FavoriteUiState(
+        uiState =
+        FavoriteUiState(
             state = ScreenStateType.Loaded,
-            pdfs = PdfListEntity(
+            pdfs =
+            PdfListEntity(
                 mutableListOf(
-                    PdfEntity("title1", "desc1", "desc1",178, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title2", "desc2", "desc1",298, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title3", "desc3", "desc1",587, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title4", "desc4", "desc1",319, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title5", "desc5", "desc1",287, getNowTimeStamp(), getNowTimeStamp())
+                    PdfEntity(
+                        "title1",
+                        "desc1",
+                        "desc1",
+                        178,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title2",
+                        "desc2",
+                        "desc1",
+                        298,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title3",
+                        "desc3",
+                        "desc1",
+                        587,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title4",
+                        "desc4",
+                        "desc1",
+                        319,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title5",
+                        "desc5",
+                        "desc1",
+                        287,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    )
                 )
             )
         ),
         onRefresh = {},
-        goViewer =  {},
+        goViewer = {},
         showBottomSheetMenu = {}
     )
 }
@@ -194,12 +238,13 @@ fun `Loaded状態`() {
 @Composable
 fun `Loading状態`() {
     ScreenContent(
-        uiState = FavoriteUiState(
+        uiState =
+        FavoriteUiState(
             state = ScreenStateType.Loading,
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
-        goViewer =  {},
+        goViewer = {},
         showBottomSheetMenu = {}
     )
 }
@@ -208,13 +253,13 @@ fun `Loading状態`() {
 @Composable
 fun `Error状態`() {
     ScreenContent(
-        uiState = FavoriteUiState(
+        uiState =
+        FavoriteUiState(
             state = ScreenStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
-        goViewer =  {},
+        goViewer = {},
         showBottomSheetMenu = {}
     )
 }
-

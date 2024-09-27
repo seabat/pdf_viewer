@@ -20,7 +20,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecentViewModel @Inject constructor(
+class RecentViewModel
+@Inject
+constructor(
     private val addFavoriteUseCase: AddFavoriteUseCaseContract,
     private val deleteFileUseCase: DeleteFileUseCaseContract,
     private val fetchRecentListUseCase: FetchRecentListUseCaseContract
@@ -39,22 +41,24 @@ class RecentViewModel @Inject constructor(
 
     fun reload() {
         reloadJob?.cancel()
-        reloadJob = viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    state = ScreenStateType.Loading,
-                    pdfs = PdfListEntity(mutableListOf())
-                )
+        reloadJob =
+            viewModelScope.launch {
+                _uiState.update {
+                    it.copy(
+                        state = ScreenStateType.Loading,
+                        pdfs = PdfListEntity(mutableListOf())
+                    )
+                }
+                delay(500)
+                fetch()
             }
-            delay(500)
-            fetch()
-        }
     }
 
     fun addFavorite(pdf: PdfEntity) {
-        addJob = viewModelScope.launch {
-            addFavoriteUseCase(pdf)
-        }
+        addJob =
+            viewModelScope.launch {
+                addFavoriteUseCase(pdf)
+            }
     }
 
     fun deletePdfFile(pdf: PdfEntity) {
@@ -64,7 +68,7 @@ class RecentViewModel @Inject constructor(
     }
 
     private suspend fun fetch() {
-        when (val result =fetchRecentListUseCase()) {
+        when (val result = fetchRecentListUseCase()) {
             is UseCaseResult.Success -> {
                 _uiState.update {
                     it.copy(
@@ -76,7 +80,7 @@ class RecentViewModel @Inject constructor(
             is UseCaseResult.Failure -> {
                 _uiState.update {
                     it.copy(
-                        state = ScreenStateType.Error(result.e),
+                        state = ScreenStateType.Error(result.e)
                     )
                 }
             }

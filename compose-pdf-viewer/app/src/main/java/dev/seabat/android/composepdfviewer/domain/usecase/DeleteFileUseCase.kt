@@ -10,7 +10,7 @@ class DeleteFileUseCase @Inject constructor(
     private val localFileRepository: LocalFileRepositoryContract,
     private val favoriteListRepository: FavoriteListRepositoryContract,
     private val recentListRepository: RecentListRepositoryContract
-): DeleteFileUseCaseContract {
+) : DeleteFileUseCaseContract {
     override suspend fun invoke(pdf: PdfEntity) {
         localFileRepository.remove(pdf.fileName)
         favoriteListRepository.remove(pdf)

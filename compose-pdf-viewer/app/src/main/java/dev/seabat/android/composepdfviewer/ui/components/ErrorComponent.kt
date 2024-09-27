@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Button
 import androidx.compose.material.Text
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -19,13 +19,13 @@ import dev.seabat.android.composepdfviewer.R
 @Composable
 fun ErrorComponent(
     e: Exception,
-    onClickRetry: () -> Unit,
+    onClickRetry: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = stringResource(id = R.string.error_text), modifier = Modifier.padding(8.dp))
         Text(
@@ -50,5 +50,6 @@ fun ErrorComponent(
 @Composable
 fun PreviewErrorComponent() {
     ErrorComponent(
-        e =Exception("エラーの内容")) {}
+        e = Exception("エラーの内容")
+    ) {}
 }

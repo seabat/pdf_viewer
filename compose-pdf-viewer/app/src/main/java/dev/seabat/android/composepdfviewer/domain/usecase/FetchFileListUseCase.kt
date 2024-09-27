@@ -1,6 +1,5 @@
 package dev.seabat.android.composepdfviewer.domain.usecase
 
-import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.domain.repository.LocalFileRepositoryContract
 import timber.log.Timber

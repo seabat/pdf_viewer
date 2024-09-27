@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PdfViewerAppBarViewModel @Inject constructor(
-    private val importFileUseCase: ImportFileUseCaseContract,
+    private val importFileUseCase: ImportFileUseCaseContract
 ) : ViewModel() {
 
     /**

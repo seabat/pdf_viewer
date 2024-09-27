@@ -25,7 +25,3 @@ fun listFilesInDirectory(context: Context): List<String>? {
     }
     return fileNames
 }
-
-
-
-

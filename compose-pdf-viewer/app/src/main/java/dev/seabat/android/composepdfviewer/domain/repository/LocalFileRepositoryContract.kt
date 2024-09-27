@@ -30,7 +30,6 @@ interface LocalFileRepositoryContract {
     @Throws(PdfViewerException::class)
     suspend fun importAssetsFile(): PdfEntity
 
-
     /**
      * アプリのプライベート領域の files ディレクトリに格納されたファイルを削除する
      *

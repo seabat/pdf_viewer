@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.theme.viewer_background
 
 const val IMAGE_VIEW_PADDING_SIZE = 16
@@ -48,7 +48,7 @@ fun PdfViewerScreen(
     modifier: Modifier = Modifier,
     viewModel: PdfViewerViewModel = hiltViewModel<PdfViewerViewModel>(),
     navController: NavHostController,
-    pdf: PdfEntity,
+    pdf: PdfEntity
 ) {
     val activity = LocalContext.current as ComponentActivity
     val uiState by viewModel.uiState.collectAsState()
@@ -65,7 +65,7 @@ fun PdfViewerScreen(
         },
         bottomBar = {
             PdfViewerBottomNavigation(
-                navController = navController,
+                navController = navController
             )
         }
     ) { paddingValues ->
@@ -89,12 +89,13 @@ fun PdfViewerScreenContent(
     readPage: (pageNo: Int) -> Unit,
     onDoubleClick: () -> Unit
 ) {
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = {
-            extractPageCount()
-        }
-    )
+    val pagerState =
+        rememberPagerState(
+            initialPage = 0,
+            pageCount = {
+                extractPageCount()
+            }
+        )
 
     LaunchedEffect(pagerState.currentPage) {
         readPage(pagerState.currentPage)
@@ -127,8 +128,7 @@ fun PdfViewerScreenContent(
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = null,
-                        modifier = Modifier
-                            .background(Color.White),
+                        modifier = Modifier.background(Color.White),
                         contentScale = ContentScale.None
                     )
                 }
@@ -148,8 +148,9 @@ fun PdfViewerScreenContent(
 @RequiresApi(Build.VERSION_CODES.R)
 private fun getImageViewDimensions(activity: Activity): Dimensions {
     val windowMetrics: WindowMetrics = activity.windowManager.currentWindowMetrics
-    val insets: Insets = windowMetrics.windowInsets
-        .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+    val insets: Insets =
+        windowMetrics.windowInsets
+            .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
 
     val dp: Float = activity.resources.displayMetrics.density
 
@@ -164,6 +165,6 @@ private fun getImageViewDimensions(activity: Activity): Dimensions {
 
     return Dimensions(
         screenWidth - horizontalPaddingSize,
-        screenHeight - verticalPaddingSize - statusBar -topAppBarHeight
+        screenHeight - verticalPaddingSize - statusBar - topAppBarHeight
     )
 }

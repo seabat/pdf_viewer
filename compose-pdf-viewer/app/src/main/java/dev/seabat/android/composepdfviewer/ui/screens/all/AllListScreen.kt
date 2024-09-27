@@ -21,13 +21,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.R
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
-import dev.seabat.android.composepdfviewer.ui.components.bottomsheet.BottomSheetMenu
-import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
-import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
 import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.ui.components.PdfListItem
+import dev.seabat.android.composepdfviewer.ui.components.bottomsheet.BottomSheetMenu
+import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -67,13 +67,13 @@ fun AllListScreen(
                 onPdfImported = { pdf ->
                     viewModel.reload()
                     val jsonString = PdfEntity.convertObjectToJson(pdf)
-                    navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+                    navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
                 }
             )
         },
         bottomBar = {
             PdfViewerBottomNavigation(
-                navController = navController,
+                navController = navController
             )
         }
     ) { paddingValues ->
@@ -83,7 +83,7 @@ fun AllListScreen(
             modifier = modifier.padding(paddingValues),
             goViewer = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
-                navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+                navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
             },
             showBottomSheetMenu = { pdf ->
                 showSheet = true
@@ -115,7 +115,9 @@ private fun ScreenSheetMenu(
             pdf?.let {
                 viewModel.addFavorite(it)
                 coroutineScope.launch {
-                    showSnackBar("${it.title}${context.resources.getString(R.string.all_add_favorite)}")
+                    showSnackBar(
+                        "${it.title}${context.resources.getString(R.string.all_add_favorite)}"
+                    )
                 }
             }
         },
@@ -143,7 +145,6 @@ private fun ScreenContent(
     modifier: Modifier = Modifier,
     goViewer: (PdfEntity) -> Unit,
     showBottomSheetMenu: (PdfEntity) -> Unit
-
 ) {
     when (uiState.state) {
         is ScreenStateType.Loading -> {
@@ -152,7 +153,13 @@ private fun ScreenContent(
         is ScreenStateType.Loaded -> {
             LazyColumn(modifier) {
                 uiState.pdfs.forEach { pdf ->
-                    item { PdfListItem(pdf = pdf, onClick = goViewer, onMoreHorizClick = showBottomSheetMenu) }
+                    item {
+                        PdfListItem(
+                            pdf = pdf,
+                            onClick = goViewer,
+                            onMoreHorizClick = showBottomSheetMenu
+                        )
+                    }
                     item { HorizontalDivider(Modifier.padding(start = 16.dp, end = 16.dp)) }
                 }
             }

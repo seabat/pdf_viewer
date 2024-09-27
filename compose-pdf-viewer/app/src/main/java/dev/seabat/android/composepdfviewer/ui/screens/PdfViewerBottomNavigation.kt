@@ -15,7 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun PdfViewerBottomNavigation(
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     val screenItems = listOf(
         Screen.Recent,
@@ -34,7 +34,12 @@ fun PdfViewerBottomNavigation(
                 icon = { Icon(screen.image, contentDescription = null) },
                 label = {
                     Text(
-                        stringResource(screen.bottomLabelResId ?: throw IllegalStateException("BottomNavigationのラベルが設定されていません"))
+                        stringResource(
+                            screen.bottomLabelResId
+                                ?: throw IllegalStateException(
+                                    "BottomNavigationのラベルが設定されていません"
+                                )
+                        )
                     )
                 },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
@@ -56,5 +61,4 @@ fun PdfViewerBottomNavigation(
             )
         }
     }
-
 }

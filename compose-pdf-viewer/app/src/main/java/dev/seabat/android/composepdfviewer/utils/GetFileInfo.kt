@@ -12,9 +12,3 @@ fun getFileInfoFromUri(context: Context, uri: Uri): Pair<String?, Long>? {
         Pair(fileName, fileSize)
     } ?: null
 }
-
-
-
-
-
-

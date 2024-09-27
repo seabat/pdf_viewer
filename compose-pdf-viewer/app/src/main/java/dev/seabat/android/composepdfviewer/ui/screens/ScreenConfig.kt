@@ -9,12 +9,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import dev.seabat.android.composepdfviewer.R
 
 sealed class Screen(
-    val route: String, // Navigation の route
+    val route: String,
     @StringRes val appBarTitleResId: Int,
     @StringRes val bottomLabelResId: Int?,
     val image: ImageVector,
     val shouldShowTopClose: Boolean,
-    val shouldShowAddAction: Boolean,
+    val shouldShowAddAction: Boolean
 ) {
     object Recent : Screen(
         "recent",
@@ -51,15 +51,13 @@ sealed class Screen(
 }
 
 @StringRes
-fun getAppBarTitle(route: String): Int {
-    return when(route) {
-        Screen.Recent.route -> Screen.Recent.appBarTitleResId
-        Screen.Favorite.route -> Screen.Favorite.appBarTitleResId
-        Screen.AllList.route -> Screen.AllList.appBarTitleResId
-        Screen.PdfViewer.route -> Screen.PdfViewer.appBarTitleResId
-        else -> {
-            throw IllegalStateException()
-        }
+fun getAppBarTitle(route: String): Int = when (route) {
+    Screen.Recent.route -> Screen.Recent.appBarTitleResId
+    Screen.Favorite.route -> Screen.Favorite.appBarTitleResId
+    Screen.AllList.route -> Screen.AllList.appBarTitleResId
+    Screen.PdfViewer.route -> Screen.PdfViewer.appBarTitleResId
+    else -> {
+        throw IllegalStateException()
     }
 }
 
@@ -68,7 +66,7 @@ fun getAppBarTitle(route: String): Int {
  */
 fun getScreen(route: String): Screen {
     val screenName = route.split("/")[0]
-    return when(screenName) {
+    return when (screenName) {
         Screen.Recent.route -> Screen.Recent
         Screen.Favorite.route -> Screen.Favorite
         Screen.AllList.route -> Screen.AllList

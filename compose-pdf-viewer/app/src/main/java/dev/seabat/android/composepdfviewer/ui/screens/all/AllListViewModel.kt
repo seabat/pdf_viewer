@@ -76,7 +76,7 @@ class AllListViewModel @Inject constructor(
             is UseCaseResult.Failure -> {
                 _uiState.update {
                     it.copy(
-                        state = ScreenStateType.Error(result.e),
+                        state = ScreenStateType.Error(result.e)
                     )
                 }
             }

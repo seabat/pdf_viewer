@@ -45,19 +45,27 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindFavoriteListRepository(repository: FavoriteListRepository): FavoriteListRepositoryContract
+    abstract fun bindFavoriteListRepository(
+        repository: FavoriteListRepository
+    ): FavoriteListRepositoryContract
 
     @Singleton
     @Binds
-    abstract fun bindLocalFileRepository(repository: LocalFileRepository): LocalFileRepositoryContract
+    abstract fun bindLocalFileRepository(
+        repository: LocalFileRepository
+    ): LocalFileRepositoryContract
 
     @Singleton
     @Binds
-    abstract fun bindPdfMetadataRepository(repository: PdfMetadataRepository): PdfMetadataRepositoryContract
+    abstract fun bindPdfMetadataRepository(
+        repository: PdfMetadataRepository
+    ): PdfMetadataRepositoryContract
 
     @Singleton
     @Binds
-    abstract fun bindRecentListRepository(repository: RecentListRepository): RecentListRepositoryContract
+    abstract fun bindRecentListRepository(
+        repository: RecentListRepository
+    ): RecentListRepositoryContract
 }
 
 @Module
@@ -70,11 +78,15 @@ abstract class UseCaseModule {
 
     @Singleton
     @Binds
-    abstract fun bindAddRecentListUseCase(useCase: AddRecentListUseCase): AddRecentListUseCaseContract
+    abstract fun bindAddRecentListUseCase(
+        useCase: AddRecentListUseCase
+    ): AddRecentListUseCaseContract
 
     @Singleton
     @Binds
-    abstract fun bindDeleteFavoriteUseCase(useCase: DeleteFavoriteUseCase): DeleteFavoriteUseCaseContract
+    abstract fun bindDeleteFavoriteUseCase(
+        useCase: DeleteFavoriteUseCase
+    ): DeleteFavoriteUseCaseContract
 
     @Singleton
     @Binds
@@ -82,19 +94,27 @@ abstract class UseCaseModule {
 
     @Singleton
     @Binds
-    abstract fun bindExtractPdfTitleUseCase(useCase: ExtractPdfTitleUseCase): ExtractPdfTitleUseCaseContract
+    abstract fun bindExtractPdfTitleUseCase(
+        useCase: ExtractPdfTitleUseCase
+    ): ExtractPdfTitleUseCaseContract
 
     @Singleton
     @Binds
-    abstract fun bindFetchFavoriteListUseCase(useCase: FetchFavoriteListUseCase): FetchFavoriteListUseCaseContract
+    abstract fun bindFetchFavoriteListUseCase(
+        useCase: FetchFavoriteListUseCase
+    ): FetchFavoriteListUseCaseContract
 
     @Singleton
     @Binds
-    abstract fun bindFetchFileListUseCase(useCase: FetchFileListUseCase): FetchFileListUseCaseContract
+    abstract fun bindFetchFileListUseCase(
+        useCase: FetchFileListUseCase
+    ): FetchFileListUseCaseContract
 
     @Singleton
     @Binds
-    abstract fun bindFetchRecentListUseCase(useCase: FetchRecentListUseCase): FetchRecentListUseCaseContract
+    abstract fun bindFetchRecentListUseCase(
+        useCase: FetchRecentListUseCase
+    ): FetchRecentListUseCaseContract
 
     @Singleton
     @Binds

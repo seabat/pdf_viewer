@@ -18,9 +18,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
-class LocalFileRepository @Inject constructor(
-    @ApplicationContext private val context: Context
-): LocalFileRepositoryContract {
+class LocalFileRepository @Inject constructor(@ApplicationContext private val context: Context) :
+    LocalFileRepositoryContract {
 
     /**
      * アプリのプライベート領域の files ディレクトリに格納されたファイル一覧を取得する
@@ -35,7 +34,9 @@ class LocalFileRepository @Inject constructor(
             } ?: return@withContext PdfListEntity(mutableListOf())
 
             val pdfEntities = fileList.toList().map {
-                val fileDateTimeString = getFileTimeStamp(it).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+                val fileDateTimeString = getFileTimeStamp(
+                    it
+                ).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
                 PdfEntity(
                     it.name,
                     it.name,
@@ -56,13 +57,16 @@ class LocalFileRepository @Inject constructor(
      */
     @Throws(PdfViewerException::class)
     override suspend fun add(uri: Uri): PdfEntity {
-        val fileInfo = getFileInfoFromUri(context, uri) ?: throw PdfViewerException("Uri からファイル情報を取得できませんでした")
+        val fileInfo = getFileInfoFromUri(context, uri)
+            ?: throw PdfViewerException(
+                "Uri からファイル情報を取得できませんでした"
+            )
         return fileInfo.first?.let { fileName ->
             copyPdfToInternalStorage(fileName, uri)
             PdfEntity(
                 fileName,
                 fileName,
-                "${context.filesDir.absolutePath}/${fileName}",
+                "${context.filesDir.absolutePath}/$fileName",
                 fileInfo.second,
                 getNowTimeStamp(),
                 getNowTimeStamp()
@@ -102,7 +106,9 @@ class LocalFileRepository @Inject constructor(
             throw PdfViewerException("サンプルのインポートに失敗しました")
         }
 
-        val fileDateTimeString = getFileTimeStamp(outputFile).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+        val fileDateTimeString = getFileTimeStamp(
+            outputFile
+        ).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
         return PdfEntity(
             outputFile.name,
             outputFile.name,
@@ -119,7 +125,7 @@ class LocalFileRepository @Inject constructor(
      * @param fileName ex. sample.pdf
      */
     override suspend fun remove(fileName: String) {
-        return withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             runCatching {
                 val file = File(context.filesDir, fileName)
                 if (file.exists()) {

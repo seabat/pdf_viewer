@@ -1,4 +1,4 @@
-package dev.seabat.android.composepdfviewer.ui.screens
+package dev.seabat.android.composepdfviewer.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
@@ -25,19 +25,19 @@ fun PdfViewerApp() {
     val navController = rememberNavController()
 
     PdfViewerNavHost(
-        navController = navController,
+        navController = navController
     )
 }
 
 @Composable
 fun PdfViewerNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Recent.route,
+        startDestination = Recent.route
     ) {
         composable(Recent.route) {
             RecentScreen(navController = navController)
@@ -50,7 +50,7 @@ fun PdfViewerNavHost(
         }
         composable(
             route = "${PdfViewer.route}/?pdf={pdf}",
-            arguments = listOf(navArgument("pdf") { type = NavType.StringType }),
+            arguments = listOf(navArgument("pdf") { type = NavType.StringType })
         ) { backStackEntry ->
             val jsonString = backStackEntry.arguments?.getString("pdf")
             jsonString?.let { json ->

@@ -7,4 +7,3 @@ data class RecentUiState(
     val state: ScreenStateType = ScreenStateType.Loading,
     val pdfs: PdfListEntity = PdfListEntity(arrayListOf())
 )
-

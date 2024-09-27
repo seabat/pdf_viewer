@@ -4,7 +4,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 
-
 @JsonClass(generateAdapter = true)
 data class PdfEntity(
     @Json(name = "title") val title: String,

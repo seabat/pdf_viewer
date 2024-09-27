@@ -42,7 +42,7 @@ fun PdfListItem(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -58,11 +58,11 @@ fun PdfListItem(
                         pdf.fileName,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = TextStyle(fontSize = 12.sp, color = Color.Gray),
+                        style = TextStyle(fontSize = 12.sp, color = Color.Gray)
                     )
                     Text(
                         text = "${convertBytes(pdf.size)}",
-                        style = TextStyle(fontSize = 12.sp, color = Color.Gray),
+                        style = TextStyle(fontSize = 12.sp, color = Color.Gray)
                     )
                 }
             }

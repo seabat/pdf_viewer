@@ -20,15 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.R
-import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.ui.components.ErrorComponent
+import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.ui.components.PdfListItem
 import dev.seabat.android.composepdfviewer.ui.components.bottomsheet.BottomSheetMenu
-import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
+import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.utils.getNowTimeStamp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -69,13 +69,13 @@ fun RecentScreen(
                 onPdfImported = { pdf ->
                     viewModel.reload()
                     val jsonString = PdfEntity.convertObjectToJson(pdf)
-                    navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+                    navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
                 }
             )
         },
         bottomBar = {
             PdfViewerBottomNavigation(
-                navController = navController,
+                navController = navController
             )
         }
     ) { paddingValues ->
@@ -85,7 +85,7 @@ fun RecentScreen(
             modifier = modifier.padding(paddingValues),
             goViewer = { pdf ->
                 val jsonString = PdfEntity.convertObjectToJson(pdf)
-                navController.navigate("pdf_viewer" + "/?pdf=${jsonString}")
+                navController.navigate("pdf_viewer" + "/?pdf=$jsonString")
             },
             showBottomSheetMenu = { pdf ->
                 showSheet = true
@@ -117,7 +117,9 @@ private fun ScreenBottomSheetMenu(
             pdf?.let {
                 viewModel.addFavorite(it)
                 coroutineScope.launch {
-                    showSnackBar("${it.title}${context.resources.getString(R.string.all_add_favorite)}")
+                    showSnackBar(
+                        "${it.title}${context.resources.getString(R.string.all_add_favorite)}"
+                    )
                 }
             }
         },
@@ -147,44 +149,86 @@ private fun ScreenContent(
     showBottomSheetMenu: (PdfEntity) -> Unit
 ) {
     when (uiState.state) {
-       is ScreenStateType.Loading -> {
-           LoadingComponent()
-       }
-       is ScreenStateType.Loaded -> {
-           LazyColumn(modifier) {
-               uiState.pdfs.forEach { pdf ->
-                   item { PdfListItem(pdf = pdf, onClick = goViewer, onMoreHorizClick = showBottomSheetMenu) }
-                   item { HorizontalDivider(Modifier.padding(start = 16.dp, end = 16.dp)) }
-               }
-           }
+        is ScreenStateType.Loading -> {
+            LoadingComponent()
+        }
+        is ScreenStateType.Loaded -> {
+            LazyColumn(modifier) {
+                uiState.pdfs.forEach { pdf ->
+                    item {
+                        PdfListItem(
+                            pdf = pdf,
+                            onClick = goViewer,
+                            onMoreHorizClick = showBottomSheetMenu
+                        )
+                    }
+                    item { HorizontalDivider(Modifier.padding(start = 16.dp, end = 16.dp)) }
+                }
+            }
         }
         is ScreenStateType.Error -> {
-           ErrorComponent(uiState.state.e) {
-               onRefresh()
-           }
-       }
+            ErrorComponent(uiState.state.e) {
+                onRefresh()
+            }
+        }
     }
 }
-
 
 @Preview
 @Composable
 fun `Loaded状態のHomeScreenContent`() {
     ScreenContent(
-        uiState = RecentUiState(
+        uiState =
+        RecentUiState(
             state = ScreenStateType.Loaded,
-            pdfs = PdfListEntity(
+            pdfs =
+            PdfListEntity(
                 mutableListOf(
-                    PdfEntity("title1", "desc1", "desc1",178, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title2", "desc2", "desc1",298, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title3", "desc3", "desc1",587, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title4", "desc4", "desc1",319, getNowTimeStamp(), getNowTimeStamp()),
-                    PdfEntity("title5", "desc5", "desc1",287, getNowTimeStamp(), getNowTimeStamp())
+                    PdfEntity(
+                        "title1",
+                        "desc1",
+                        "desc1",
+                        178,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title2",
+                        "desc2",
+                        "desc1",
+                        298,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title3",
+                        "desc3",
+                        "desc1",
+                        587,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title4",
+                        "desc4",
+                        "desc1",
+                        319,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    ),
+                    PdfEntity(
+                        "title5",
+                        "desc5",
+                        "desc1",
+                        287,
+                        getNowTimeStamp(),
+                        getNowTimeStamp()
+                    )
                 )
             )
         ),
         onRefresh = {},
-        goViewer =  {},
+        goViewer = {},
         showBottomSheetMenu = {}
     )
 }
@@ -193,12 +237,13 @@ fun `Loaded状態のHomeScreenContent`() {
 @Composable
 fun `Loading状態のHomeScreenContent`() {
     ScreenContent(
-        uiState = RecentUiState(
+        uiState =
+        RecentUiState(
             state = ScreenStateType.Loading,
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
-        goViewer =  {},
+        goViewer = {},
         showBottomSheetMenu = {}
     )
 }
@@ -207,12 +252,13 @@ fun `Loading状態のHomeScreenContent`() {
 @Composable
 fun `Error状態のHomeScreenContent`() {
     ScreenContent(
-        uiState = RecentUiState(
+        uiState =
+        RecentUiState(
             state = ScreenStateType.Error(Exception("エラー内容")),
             pdfs = PdfListEntity(mutableListOf())
         ),
         onRefresh = {},
-        goViewer =  {},
+        goViewer = {},
         showBottomSheetMenu = {}
     )
 }

@@ -4,6 +4,7 @@ plugins {
     kotlin("kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("org.jmailen.kotlinter")
 }
 
 android {
@@ -57,7 +58,7 @@ dependencies {
     val navVersion = "2.7.1"
 
     // Hilt
-    implementation ("com.google.dagger:hilt-android:2.44.2")
+    implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation("androidx.core:core-ktx:1.9.0")
@@ -69,7 +70,7 @@ dependencies {
     androidTestImplementation(composeBom)
     // Material 3
     implementation("androidx.compose.material3:material3")
-    implementation ("androidx.compose.material3:material3:1.2.0-alpha10")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha10")
     // Material 2
     implementation("androidx.compose.material:material")
 
@@ -85,7 +86,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
 
     // Log
-    implementation ("com.jakewharton.timber:timber:5.0.1")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
     // Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
@@ -98,7 +99,7 @@ dependencies {
     val roomVersion = "2.6.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    //ksp("androidx.room:room-compiler:$roomVersion")
+    // ksp("androidx.room:room-compiler:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
     // Test
