@@ -21,10 +21,14 @@ import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.CreatePdfRendererUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.CreatePdfRendererUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFavoriteUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFileUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPageCountUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPageCountUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPdfTitleUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.FetchFavoriteListUseCase
@@ -37,6 +41,8 @@ import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportFileUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.ImportSampleUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.RendererPdfUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.RendererPdfUseCaseContract
 import javax.inject.Singleton
 
 @Module
@@ -84,6 +90,12 @@ abstract class UseCaseModule {
 
     @Singleton
     @Binds
+    abstract fun bindAddCreatePdfRendererUseCase(
+        useCase: CreatePdfRendererUseCase
+    ): CreatePdfRendererUseCaseContract
+
+    @Singleton
+    @Binds
     abstract fun bindDeleteFavoriteUseCase(
         useCase: DeleteFavoriteUseCase
     ): DeleteFavoriteUseCaseContract
@@ -91,6 +103,12 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindDeleteFiletUseCase(useCase: DeleteFileUseCase): DeleteFileUseCaseContract
+
+    @Singleton
+    @Binds
+    abstract fun bindExtractPageCountUseCase(
+        useCase: ExtractPageCountUseCase
+    ): ExtractPageCountUseCaseContract
 
     @Singleton
     @Binds
@@ -123,6 +141,10 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindImportSampleUseCase(useCase: ImportSampleUseCase): ImportSampleUseCaseContract
+
+    @Singleton
+    @Binds
+    abstract fun bindRendererPdfUseCase(useCase: RendererPdfUseCase): RendererPdfUseCaseContract
 }
 
 @Module
@@ -130,7 +152,5 @@ abstract class UseCaseModule {
 object ActivityModule {
     @Provides
     @ActivityScoped
-    fun provideContext(@ActivityContext context: Context): Context {
-        return context
-    }
+    fun provideContext(@ActivityContext context: Context): Context = context
 }

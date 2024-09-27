@@ -1,32 +1,34 @@
 package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
-import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
-import android.os.ParcelFileDescriptor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.CreatePdfRendererUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPageCountUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.RendererPdfUseCaseContract
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.IOException
-import javax.inject.Inject
 
 @HiltViewModel
 class PdfViewerViewModel
 @Inject
 constructor(
-    private val addRecentListUseCase: AddRecentListUseCaseContract
+    private val addRecentListUseCase: AddRecentListUseCaseContract,
+    private val createPdfRendererUseCase: CreatePdfRendererUseCaseContract,
+    private val extractPageCountUseCase: ExtractPageCountUseCaseContract,
+    private val rendererPdfUseCase: RendererPdfUseCaseContract
 ) : ViewModel() {
     private val _uiState =
-        MutableStateFlow<PdfViewerUiState>(
+        MutableStateFlow(
             PdfViewerUiState(
                 state = ScreenStateType.Loading,
                 currentPageNo = 0,
@@ -58,23 +60,12 @@ constructor(
                     state = ScreenStateType.Loading
                 )
             }
-
-            val file = File(filePath)
-            try {
-                val parcelFileDescriptor = ParcelFileDescriptor.open(
-                    file,
-                    ParcelFileDescriptor.MODE_READ_ONLY
-                )
-                pdfRenderer = PdfRenderer(parcelFileDescriptor)
-            } catch (e: IOException) {
-                // T0DO:
-                e.printStackTrace()
-            }
+            pdfRenderer = createPdfRendererUseCase(filePath)
 
             _uiState.update {
                 it.copy(
                     state = ScreenStateType.Loaded,
-                    totalPageCount = pdfRenderer.pageCount
+                    totalPageCount = extractPageCountUseCase(pdfRenderer)
                 )
             }
         }
@@ -105,32 +96,7 @@ constructor(
                     )
                 }
 
-                val page = pdfRenderer.openPage(pageNo)
-                val dimensions =
-                    calculateBitmapDimensions(
-                        Dimensions(page.width, page.height),
-                        displayArea
-                    )
-
-                val bitmap =
-                    when (zoomType) {
-                        ZoomType.ZoomNone -> {
-                            Bitmap.createBitmap(
-                                dimensions.width,
-                                dimensions.height,
-                                Bitmap.Config.ARGB_8888
-                            )
-                        }
-                        ZoomType.ZoomDouble -> {
-                            Bitmap.createBitmap(
-                                (dimensions.width * 2.0).toInt(),
-                                (dimensions.height * 2.0).toInt(),
-                                Bitmap.Config.ARGB_8888
-                            )
-                        }
-                    }
-
-                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                val bitmap = rendererPdfUseCase(pdfRenderer, pageNo, displayArea, zoomType)
 
                 _uiState.update {
                     it.copy(
@@ -140,32 +106,6 @@ constructor(
                         zoom = zoomType
                     )
                 }
-
-                page.close()
             }
-    }
-
-    private fun calculateBitmapDimensions(
-        pdf: Dimensions,
-        displayArea: Dimensions
-    ): Dimensions {
-        val pdfRatio = pdf.height.toDouble() / pdf.width.toDouble()
-        val deviceRatio = displayArea.height.toDouble() / displayArea.width.toDouble()
-        return if (deviceRatio > pdfRatio) {
-            // 端末の方が縦長である場合は横幅を目一杯広げる
-            // つまり、生成する Bitmap の width は表示領域と同じなり、
-            // height には width の拡大/縮小した比率を適用する。
-            Dimensions(
-                width = displayArea.width,
-                height = ((displayArea.width.toDouble() / pdf.width.toDouble()) * pdf.height)
-                    .toInt()
-            )
-        } else {
-            Dimensions(
-                width = ((displayArea.height.toDouble() / pdf.height.toDouble()) * pdf.width)
-                    .toInt(),
-                height = displayArea.height
-            )
-        }
     }
 }
