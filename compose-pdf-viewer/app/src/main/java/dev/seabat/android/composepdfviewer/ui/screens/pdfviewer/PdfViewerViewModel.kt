@@ -31,12 +31,12 @@ constructor(
                 state = ScreenStateType.Loading,
                 currentPageNo = 0,
                 bitmap = null,
-                zoom = ZoomType.ZoomNone
+                zoom = ZoomType.ZoomNone,
+                totalPageCount = 0
             )
         )
     val uiState: StateFlow<PdfViewerUiState> = _uiState.asStateFlow()
 
-    private var totalPageCount = 0
     private var renderingJob: Job? = null
     private lateinit var pdfRenderer: PdfRenderer
 
@@ -51,20 +51,32 @@ constructor(
         }
     }
 
-    fun extractPageCount(filePath: String): Int {
-        val file = File(filePath)
-        try {
-            val parcelFileDescriptor = ParcelFileDescriptor.open(
-                file,
-                ParcelFileDescriptor.MODE_READ_ONLY
-            )
-            pdfRenderer = PdfRenderer(parcelFileDescriptor)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return pdfRenderer.pageCount.let {
-            totalPageCount = it
-            totalPageCount
+    fun createRendererAndExtractPageCount(filePath: String) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    state = ScreenStateType.Loading
+                )
+            }
+
+            val file = File(filePath)
+            try {
+                val parcelFileDescriptor = ParcelFileDescriptor.open(
+                    file,
+                    ParcelFileDescriptor.MODE_READ_ONLY
+                )
+                pdfRenderer = PdfRenderer(parcelFileDescriptor)
+            } catch (e: IOException) {
+                // T0DO:
+                e.printStackTrace()
+            }
+
+            _uiState.update {
+                it.copy(
+                    state = ScreenStateType.Loaded,
+                    totalPageCount = pdfRenderer.pageCount
+                )
+            }
         }
     }
 

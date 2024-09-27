@@ -19,7 +19,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
+import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
 import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
@@ -55,6 +56,7 @@ fun PdfViewerScreen(
 
     LaunchedEffect(Unit) {
         viewModel.addRecentPdf(pdf)
+        viewModel.createRendererAndExtractPageCount(pdf.pathString)
     }
 
     Scaffold(
@@ -69,13 +71,29 @@ fun PdfViewerScreen(
             )
         }
     ) { paddingValues ->
-        PdfViewerScreenContent(
-            uiState = uiState,
-            modifier = modifier.padding(paddingValues),
-            readPage = { pageNo -> viewModel.readAhead(pageNo, getImageViewDimensions(activity)) },
-            extractPageCount = { viewModel.extractPageCount(pdf.pathString) },
-            onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
-        )
+        when (uiState.state) {
+            is ScreenStateType.Error -> {
+                // TODO: Error Screen
+            }
+            is ScreenStateType.Loading -> {
+                LoadingComponent()
+            }
+            is ScreenStateType.Loaded -> {
+                PdfViewerScreenContent(
+                    uiState = uiState,
+                    modifier = modifier.padding(paddingValues),
+                    readPage = { pageNo ->
+                        viewModel.readAhead(
+                            pageNo,
+                            getImageViewDimensions(
+                                activity
+                            )
+                        )
+                    },
+                    onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
+                )
+            }
+        }
     }
 }
 
@@ -85,16 +103,13 @@ fun PdfViewerScreen(
 fun PdfViewerScreenContent(
     uiState: PdfViewerUiState,
     modifier: Modifier = Modifier,
-    extractPageCount: () -> Int,
     readPage: (pageNo: Int) -> Unit,
     onDoubleClick: () -> Unit
 ) {
     val pagerState =
         rememberPagerState(
             initialPage = 0,
-            pageCount = {
-                extractPageCount()
-            }
+            pageCount = { uiState.totalPageCount }
         )
 
     LaunchedEffect(pagerState.currentPage) {

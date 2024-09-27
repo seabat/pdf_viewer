@@ -5,9 +5,9 @@ import dev.seabat.android.composepdfviewer.data.datasource.room.RecentPdfDao
 import dev.seabat.android.composepdfviewer.domain.entity.PdfListEntity
 import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.repository.RecentListRepositoryContract
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class RecentListRepository @Inject constructor(private val recentPdfDao: RecentPdfDao) :
     RecentListRepositoryContract {

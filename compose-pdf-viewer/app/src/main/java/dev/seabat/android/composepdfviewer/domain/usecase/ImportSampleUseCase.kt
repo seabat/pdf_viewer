@@ -13,5 +13,6 @@ class ImportSampleUseCase @Inject constructor(
      *
      * @return
      */
-    override suspend operator fun invoke(): PdfResourceEntity = localFileRepository.importAssetsFile()
+    override suspend operator fun invoke(): PdfResourceEntity =
+        localFileRepository.importAssetsFile()
 }
