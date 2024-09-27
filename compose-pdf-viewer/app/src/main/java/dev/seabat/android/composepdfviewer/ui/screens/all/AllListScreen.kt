@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.R
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AllListScreen(
     modifier: Modifier = Modifier,
-    viewModel: AllListViewModel,
+    viewModel: AllListViewModel = hiltViewModel<AllListViewModel>(),
     navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()

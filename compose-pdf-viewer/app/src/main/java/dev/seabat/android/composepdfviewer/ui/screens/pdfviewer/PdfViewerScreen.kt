@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.domain.entity.PdfEntity
 import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
@@ -45,7 +46,7 @@ const val IMAGE_VIEW_PADDING_SIZE = 16
 @Composable
 fun PdfViewerScreen(
     modifier: Modifier = Modifier,
-    viewModel: PdfViewerViewModel,
+    viewModel: PdfViewerViewModel = hiltViewModel<PdfViewerViewModel>(),
     navController: NavHostController,
     pdf: PdfEntity,
 ) {

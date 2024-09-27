@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import dev.seabat.android.composepdfviewer.R
 import dev.seabat.android.composepdfviewer.ui.components.LoadingComponent
@@ -36,7 +37,7 @@ import java.lang.Exception
 @Composable
 fun RecentScreen(
     modifier: Modifier = Modifier,
-    viewModel: RecentViewModel,
+    viewModel: RecentViewModel = hiltViewModel<RecentViewModel>(),
     navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
