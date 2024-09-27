@@ -21,6 +21,8 @@ import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddFavoriteUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.ClosePdfRendererUseCase
+import dev.seabat.android.composepdfviewer.domain.usecase.ClosePdfRendererUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.CreatePdfRendererUseCase
 import dev.seabat.android.composepdfviewer.domain.usecase.CreatePdfRendererUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.DeleteFavoriteUseCase
@@ -93,6 +95,12 @@ abstract class UseCaseModule {
     abstract fun bindAddCreatePdfRendererUseCase(
         useCase: CreatePdfRendererUseCase
     ): CreatePdfRendererUseCaseContract
+
+    @Singleton
+    @Binds
+    abstract fun bindClosePdfRendererUseCase(
+        useCase: ClosePdfRendererUseCase
+    ): ClosePdfRendererUseCaseContract
 
     @Singleton
     @Binds

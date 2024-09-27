@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
 import dev.seabat.android.composepdfviewer.domain.usecase.AddRecentListUseCaseContract
+import dev.seabat.android.composepdfviewer.domain.usecase.ClosePdfRendererUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.CreatePdfRendererUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.ExtractPageCountUseCaseContract
 import dev.seabat.android.composepdfviewer.domain.usecase.RendererPdfUseCaseContract
@@ -23,6 +24,7 @@ class PdfViewerViewModel
 @Inject
 constructor(
     private val addRecentListUseCase: AddRecentListUseCaseContract,
+    private val closePdfRendererUseCase: ClosePdfRendererUseCaseContract,
     private val createPdfRendererUseCase: CreatePdfRendererUseCaseContract,
     private val extractPageCountUseCase: ExtractPageCountUseCaseContract,
     private val rendererPdfUseCase: RendererPdfUseCaseContract
@@ -44,6 +46,7 @@ constructor(
 
     override fun onCleared() {
         renderingJob?.cancel()
+        closePdfRendererUseCase(pdfRenderer)
         super.onCleared()
     }
 
