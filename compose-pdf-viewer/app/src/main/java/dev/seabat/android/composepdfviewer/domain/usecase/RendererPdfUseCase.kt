@@ -5,6 +5,8 @@ import android.graphics.pdf.PdfRenderer
 import dev.seabat.android.composepdfviewer.ui.screens.pdfviewer.Dimensions
 import dev.seabat.android.composepdfviewer.ui.screens.pdfviewer.ZoomType
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RendererPdfUseCase @Inject constructor() : RendererPdfUseCaseContract {
     override suspend fun invoke(
@@ -12,7 +14,7 @@ class RendererPdfUseCase @Inject constructor() : RendererPdfUseCaseContract {
         pageNo: Int,
         displayArea: Dimensions,
         zoomType: ZoomType
-    ): Bitmap {
+    ): Bitmap = withContext(Dispatchers.IO) {
         val page = renderer.openPage(pageNo)
         val dimensions =
             calculateBitmapDimensions(
@@ -40,7 +42,7 @@ class RendererPdfUseCase @Inject constructor() : RendererPdfUseCaseContract {
 
         page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
         page.close()
-        return bitmap
+        bitmap
     }
 
     private fun calculateBitmapDimensions(
