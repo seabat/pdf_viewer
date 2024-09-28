@@ -34,13 +34,16 @@ constructor(
         MutableStateFlow(
             PdfViewerUiState(
                 state = ScreenStateType.Loading,
-                currentPageNo = 0,
-                bitmap = null,
+                currentPageIndex = 0,
+                currentBitmap = null,
                 zoom = ZoomType.ZoomNone,
                 totalPageCount = 0
             )
         )
     val uiState: StateFlow<PdfViewerUiState> = _uiState.asStateFlow()
+
+    private val _renderedBitmaps = MutableStateFlow(RenderedBitmapList(5))
+    val renderedBitmaps: StateFlow<RenderedBitmapList> = _renderedBitmaps.asStateFlow()
 
     private var renderingJob: Job? = null
     private lateinit var pdfRenderer: PdfRenderer
@@ -76,22 +79,30 @@ constructor(
     }
 
     fun readAhead(
-        pageNo: Int,
+        pageIndex: Int,
         displayArea: Dimensions
     ) {
-        doRendering(pageNo, displayArea, uiState.value.zoom)
+        doRendering(pageIndex, displayArea, uiState.value.zoom)
     }
 
     fun changePageSize(displayArea: Dimensions) {
         val newZoom = ZoomType.next(uiState.value.zoom)
-        doRendering(uiState.value.currentPageNo, displayArea, newZoom)
+        doRendering(uiState.value.currentPageIndex, displayArea, newZoom)
     }
 
     private fun doRendering(
-        pageNo: Int,
+        pageIndex: Int,
         displayArea: Dimensions,
         zoomType: ZoomType
     ) {
+        // 既にレンダリング済みの Bitmap が存在する場合はレンダリングをスキップする
+        _renderedBitmaps.value.get(pageIndex)?.let { indexedBitmap ->
+            _renderedBitmaps.update {
+                it.apply { add(indexedBitmap) }
+            }
+            return@doRendering
+        }
+
         renderingJob =
             viewModelScope.launch {
                 _uiState.update {
@@ -103,13 +114,16 @@ constructor(
                 // TODO: あとで削除する
                 delay(1000)
 
-                val bitmap = rendererPdfUseCase(pdfRenderer, pageNo, displayArea, zoomType)
+                val bitmap = rendererPdfUseCase(pdfRenderer, pageIndex, displayArea, zoomType)
 
+                _renderedBitmaps.update {
+                    it.apply { add(RenderedBitmap(pageIndex, bitmap)) }
+                }
                 _uiState.update {
                     it.copy(
-                        currentPageNo = pageNo,
+                        currentPageIndex = pageIndex,
                         state = ScreenStateType.Loaded,
-                        bitmap = bitmap,
+                        currentBitmap = bitmap,
                         zoom = zoomType
                     )
                 }

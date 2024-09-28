@@ -2,11 +2,9 @@ package dev.seabat.android.composepdfviewer.ui.screens.pdfviewer
 
 import android.app.Activity
 import android.graphics.Insets
-import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowMetrics
 import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,19 +28,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import dev.seabat.android.composepdfviewer.R
 import dev.seabat.android.composepdfviewer.domain.entity.PdfResourceEntity
-import dev.seabat.android.composepdfviewer.ui.components.WrapLoadingComponent
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerAppBar
 import dev.seabat.android.composepdfviewer.ui.screens.PdfViewerBottomNavigation
-import dev.seabat.android.composepdfviewer.ui.screens.ScreenStateType
 import dev.seabat.android.composepdfviewer.ui.theme.viewer_background
 
 const val IMAGE_VIEW_PADDING_SIZE = 16
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun PdfViewerScreen(
     modifier: Modifier = Modifier,
@@ -71,14 +68,11 @@ fun PdfViewerScreen(
         }
     ) { paddingValues ->
         PdfViewerScreenContent(
-            uiState = uiState,
             modifier = modifier.padding(paddingValues),
-            readPage = { pageNo ->
+            readPage = { pageIndex ->
                 viewModel.readAhead(
-                    pageNo,
-                    getImageViewDimensions(
-                        activity
-                    )
+                    pageIndex,
+                    getImageViewDimensions(activity)
                 )
             },
             onDoubleClick = { viewModel.changePageSize(getImageViewDimensions(activity)) }
@@ -86,24 +80,22 @@ fun PdfViewerScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.R)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PdfViewerScreenContent(
-    uiState: PdfViewerUiState,
     modifier: Modifier = Modifier,
-    readPage: (pageNo: Int) -> Unit,
+    viewModel: PdfViewerViewModel = hiltViewModel<PdfViewerViewModel>(),
+    readPage: (pageIndex: Int) -> Unit,
     onDoubleClick: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val renderedBitmaps by viewModel.renderedBitmaps.collectAsState()
+
     val pagerState =
         rememberPagerState(
             initialPage = 0,
             pageCount = { uiState.totalPageCount }
         )
-
-    LaunchedEffect(pagerState.currentPage) {
-        readPage(pagerState.currentPage)
-    }
 
     Box(modifier = modifier.fillMaxSize()) {
         HorizontalPager(
@@ -112,35 +104,39 @@ fun PdfViewerScreenContent(
                 .background(viewer_background)
                 .fillMaxSize()
         ) { pageIndex ->
-            uiState.bitmap?.let {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .padding(IMAGE_VIEW_PADDING_SIZE.dp)
-                        .fillMaxSize()
-                        .background(viewer_background)
-                        .verticalScroll(rememberScrollState())
-                        .horizontalScroll(rememberScrollState())
-                        .combinedClickable(
-                            onClick = {},
-                            onDoubleClick = {
-                                onDoubleClick()
-                            },
-                            onLongClick = {}
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(IMAGE_VIEW_PADDING_SIZE.dp)
+                    .fillMaxSize()
+                    .background(viewer_background)
+                    .verticalScroll(rememberScrollState())
+                    .horizontalScroll(rememberScrollState())
+                    .combinedClickable(
+                        onClick = {},
+                        onDoubleClick = {
+                            onDoubleClick()
+                        },
+                        onLongClick = {}
+                    )
+            ) {
+                if (renderedBitmaps.contains(pageIndex)) {
+                    renderedBitmaps.get(pageIndex)?.let {
+                        Image(
+                            bitmap = it.bitmap.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier.background(Color.White),
+                            contentScale = ContentScale.None
                         )
-                ) {
+                    }
+                } else {
+                    readPage(pageIndex)
+                    // ページが読み込み中の場合はプレースホルダーを表示
                     Image(
-                        bitmap = it.asImageBitmap(),
-                        contentDescription = null,
-                        modifier = Modifier.background(Color.White),
-                        contentScale = ContentScale.None
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        contentDescription = null
                     )
                 }
-            }
-        }
-        if (uiState.state == ScreenStateType.Loading) {
-            Box(modifier = Modifier.align(Alignment.Center)) {
-                WrapLoadingComponent()
             }
         }
     }
@@ -149,7 +145,6 @@ fun PdfViewerScreenContent(
 /**
  * Pager に配置可能な Image の最大サイズを取得する
  */
-@RequiresApi(Build.VERSION_CODES.R)
 private fun getImageViewDimensions(activity: Activity): Dimensions {
     val windowMetrics: WindowMetrics = activity.windowManager.currentWindowMetrics
     val insets: Insets =
