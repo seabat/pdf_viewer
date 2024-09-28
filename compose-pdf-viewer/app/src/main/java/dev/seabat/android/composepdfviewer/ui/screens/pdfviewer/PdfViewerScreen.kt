@@ -48,7 +48,6 @@ fun PdfViewerScreen(
     pdf: PdfResourceEntity
 ) {
     val activity = LocalContext.current as ComponentActivity
-    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.addRecentPdf(pdf)
