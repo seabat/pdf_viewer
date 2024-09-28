@@ -116,11 +116,11 @@ constructor(
 
                 val bitmap = rendererPdfUseCase(pdfRenderer, pageIndex, displayArea, zoomType)
 
-                _renderedBitmaps.update {
-                    it.apply { add(RenderedBitmap(pageIndex, bitmap)) }
-                }
-                _uiState.update {
-                    it.copy(
+                _uiState.update { state ->
+                    _renderedBitmaps.update { bitmaps ->
+                        bitmaps.apply { add(RenderedBitmap(pageIndex, bitmap)) }
+                    }
+                    state.copy(
                         currentPageIndex = pageIndex,
                         state = ScreenStateType.Loaded,
                         currentBitmap = bitmap,
